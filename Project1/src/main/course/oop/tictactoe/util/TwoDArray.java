@@ -1,4 +1,8 @@
 package main.course.oop.tictactoe.util;
+import java.lang.StringBuilder;
+import java.util.HashMap;
+import java.util.Map;
+import java.lang.IllegalArgumentException;
 
 /**
  * You must implement the following methods to accept the expected 
@@ -10,72 +14,94 @@ package main.course.oop.tictactoe.util;
  */
 public class TwoDArray {
 	
+	private int[][] arr;
+	private int defaultVal;
 	
 	public TwoDArray(int rows, int cols, int defaultVal){
-		/*TODO - Create a 2D integer array consisting of 
-		 * the number of rows and columns given. Initialize 
-		 * the array by setting each int to be the defaulVal. 
-		 * */
+		this.arr = new int[rows][cols];
+		this.defaultVal = defaultVal;
+		initArray(defaultVal);
 	}
 	
 	public void initArray(int defaultVal) {
-		/*TODO - (Re)Initialize the array by 
-		 * setting each int to be the defaulVal 
-		 */
-		
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr[i].length; j++) {
+				arr[i][j] = defaultVal;
+			}
+		}
 	}
 	
 	public String insertInt(int row, int col, int val) {
-		/*TODO - "Insert" based on the following conditions:
-		 * 1. The location [row][col] is still set to the default value
-		 * 		-return "Success! (val) was inserted.
-		 * 
-		 * 2. The location [row][col] is no longer the default value
-		 * 		-return "Failure: (row), (col) is not empty.
-		 * 
-		 * 3. val is not the default value; 
-		 * 		-return "Failure: (val) is not allowed."
-		 * 
-		 * Note: Print the int value in place of (). 
-		 * e.g., replace (val) with val.
-		 */
-		return "Not implemented";
+		if (row < 0 || row >= arr.length || col < 0 || col >= arr[row].length) {
+			throw new IllegalArgumentException();
+		}
+		
+		String returnString = "";
+		
+		// 1. The location [row][col] is still set to the default value
+		// 		-return "Success! (val) was inserted.
+		if (arr[row][col] == this.defaultVal) {
+			 arr[row][col] = val;
+			 returnString = "Success! " + val + " was inserted.";
+		 }
+		// 2. The location [row][col] is no longer the default value
+		// 		-return "Failure: (row), (col) is not empty.
+		 else if (arr[row][col] != this.defaultVal) {
+			 returnString = "Failure: " + row + ", "+ col+ " is not empty.";
+		 }
+		// 3. val is not the default value; 
+		// 		-return "Failure: (val) is not allowed."
+		else if (val != this.defaultVal) {
+			returnString = "Failure: " + val + " is not allowed.";
+		}
+		 
+		 return returnString;
 	}
 	
 	public int getInt(int row, int col) {
-		/*TODO - Return the value at the specified row, col
-		 * 
-		 */
-		
-		return 0;
+		if (row < 0 || row >= arr.length || col < 0 || col >= arr[row].length) {
+			throw new IllegalArgumentException();
+		}
+		return arr[row][col];
 	}
 	
 	public String getArrayDisplay() {
-		/*TODO - Create a 2D display of the Array
-		 * e.g. 
-		 * 	1	0	1
-		 *  0	1	0
-		 *  0	1	1
-		 * 
-		 */
-		
-		return "Not implemented";
+		StringBuilder representation = new StringBuilder();
+		StringBuilder line;
+		for (int i = 0; i < arr.length; i++) {
+			line = new StringBuilder();
+			for (int j = 0; j < arr[i].length; j++) {
+				line.append(arr[i][j] + " ");
+			}
+			//remove the last space from the line
+			line.delete(line.length()-1,line.length());
+			representation.append(line + System.lineSeparator());
+		}
+		//remove the last newline from the representation of the array
+		int seperatorLength = System.lineSeparator().length();
+		representation.delete(representation.length()-seperatorLength,representation.length());
+		return representation.toString();
 	}
 	
 	public String getArrayDetails() {
-		/*TODO - List the following:
-		 * # rows
-		 * # columns
-		 * How many unique values (in the above example, this would be 2
-		 * Value and count of each (e.g. 
-		 * 			value:1 count:5
-		 * 			value:0 count:4
-		 * 
-		 * 			)
-		 * 
-		 */
+		StringBuilder details = new StringBuilder();
+		details.append(arr.length + " rows" + System.lineSeparator());
+		details.append(arr[0].length + " columns" + System.lineSeparator());
 		
-		return "Not implemented";
-	}		
-
+		Map<Integer, Integer> values = new HashMap<Integer, Integer>(); 
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr[i].length; j++) {
+				int count = values.containsKey(arr[i][j]) ? values.get(arr[i][j]) : 0;
+				values.put(arr[i][j], count + 1);
+			}
+		}
+		
+		for (Map.Entry<Integer, Integer> entry : values.entrySet()) { 
+			details.append("value:" + entry.getKey() + " count:" + entry.getValue() + System.lineSeparator());
+		}
+		
+		int seperatorLength = System.lineSeparator().length();
+		details.delete(details.length()-seperatorLength,details.length());
+		return details.toString();
+	}
 }
