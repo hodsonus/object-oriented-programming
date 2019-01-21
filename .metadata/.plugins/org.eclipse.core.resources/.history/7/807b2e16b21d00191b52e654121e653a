@@ -35,22 +35,25 @@ public class TwoDArray {
 		if (row < 0 || row >= arr.length || col < 0 || col >= arr[row].length) {
 			throw new IllegalArgumentException();
 		}
-			
+		
+		String returnString = "";
+		
 		// 2. The location [row][col] is no longer the default value
 		// 		-return "Failure: (row), (col) is not empty.
 		if (arr[row][col] != this.defaultVal) {
-			 return "Failure: " + row + ", "+ col+ " is not empty.";
+			 returnString = "Failure: " + row + ", "+ col+ " is not empty.";
 		 }
 		// 3. val is the default value; 
 		// 		-return "Failure: (val) is not allowed."
 		else if (val == this.defaultVal) {
-			return "Failure: " + val + " is not allowed.";
+			returnString = "Failure: " + val + " is not allowed.";
 		}
 		// 1. The location [row][col] is still set to the default value
 		// 		-return "Success! (val) was inserted.
 		arr[row][col] = val;
-		return "Success! " + val + " was inserted.";
-		
+		returnString = "Success! " + val + " was inserted.";
+		 
+		return returnString;
 	}
 	
 	public int getInt(int row, int col) {

@@ -33,7 +33,7 @@ public class Proj1Test {
 			}
 			
 			System.out.println("Insert -> ["+row+"]["+col+"] ="+val);
-			System.out.println(arr2d.insertInt(row, col, val));
+			arr2d.insertInt(row, col, val);
 		}
 		int returnedVal = arr2d.getInt(testRow, testCol);
 		System.out.println("Expecting: "+testVal+", returned: "+returnedVal+". Test passed: "+ (testVal==returnedVal));		
