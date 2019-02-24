@@ -1,0 +1,22 @@
+package course.oop.controller;
+
+public class InvalidPersonOperation extends RuntimeException {
+
+	/**
+	 * 
+	 */
+	private String message;
+
+	public InvalidPersonOperation(String message){
+	    this.message = message;
+	}
+
+	public InvalidPersonOperation() {
+		this.message  = "";
+	}
+	
+	@Override
+	public String toString() {
+		return "InvalidPersonOperation: " + message;
+	}
+}

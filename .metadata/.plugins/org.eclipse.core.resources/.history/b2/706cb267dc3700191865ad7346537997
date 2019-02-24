@@ -1,0 +1,8 @@
+package course.oop.main;
+
+public class TTTDriver {
+
+	public static void main(String[] args) {
+		TTTControllerInterface controller = new TTTControllerImpl();
+	}
+}

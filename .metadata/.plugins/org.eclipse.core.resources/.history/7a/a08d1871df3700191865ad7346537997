@@ -1,0 +1,5 @@
+package course.oop.other;
+
+public abstract class Board {
+
+}

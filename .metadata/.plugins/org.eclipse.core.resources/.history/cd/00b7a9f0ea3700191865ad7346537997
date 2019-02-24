@@ -1,0 +1,5 @@
+package course.oop.controller;
+
+public class GameInProgressException extends RuntimeException {
+
+}

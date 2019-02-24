@@ -1,0 +1,19 @@
+package course.oop.controller;
+
+public class GameNotStartedException extends Exception {
+
+	private String message;
+
+	public GameNotStartedException(String message){
+	    this.message = message;
+	}
+
+	public GameNotStartedException() {
+		this.message  ="";
+	}
+	
+	@Override
+	public String toString() {
+		return "OutOfBoundsException: " + message;
+	}
+}

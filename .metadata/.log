@@ -1,4 +1,4 @@
-!SESSION 2019-01-17 13:22:15.739 -----------------------------------------------
+!SESSION 2019-02-23 21:24:15.830 -----------------------------------------------
 eclipse.buildId=4.6.2.M20161124-1400
 java.version=1.8.0_191
 java.vendor=Oracle Corporation
@@ -6,71 +6,8 @@ BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
 Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
 Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
 
-!ENTRY org.eclipse.core.net 1 0 2019-01-17 13:23:00.735
-!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
-!SESSION 2019-01-17 13:25:01.526 -----------------------------------------------
-eclipse.buildId=4.6.2.M20161124-1400
-java.version=1.8.0_191
-java.vendor=Oracle Corporation
-BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
-Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-
-!ENTRY org.eclipse.core.net 1 0 2019-01-17 13:25:08.586
-!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
-!SESSION 2019-01-17 14:22:44.903 -----------------------------------------------
-eclipse.buildId=4.6.2.M20161124-1400
-java.version=1.8.0_191
-java.vendor=Oracle Corporation
-BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
-Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-
-!ENTRY org.eclipse.core.net 1 0 2019-01-17 14:22:53.004
+!ENTRY org.eclipse.core.net 1 0 2019-02-23 21:24:23.945
 !MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
 
-!ENTRY org.eclipse.epp.mpc.ui 1 0 2019-01-17 14:23:30.200
-!MESSAGE Performing Marketplace install request from http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=171
-!SESSION 2019-01-17 14:23:57.847 -----------------------------------------------
-eclipse.buildId=4.6.2.M20161124-1400
-java.version=1.8.0_191
-java.vendor=Oracle Corporation
-BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
-Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -data file:/Users/johnhodson/GitHub/object-oriented-programming/ -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-
-!ENTRY org.eclipse.core.net 1 0 2019-01-17 14:24:03.400
-!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
-
-!ENTRY org.eclipse.epp.mpc.ui 1 0 2019-01-17 14:24:39.566
-!MESSAGE Performing Marketplace install request from http://marketplace.eclipse.org/marketplace-client-intro?mpc_install=1336
-!SESSION 2019-01-17 14:25:12.408 -----------------------------------------------
-eclipse.buildId=4.6.2.M20161124-1400
-java.version=1.8.0_191
-java.vendor=Oracle Corporation
-BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
-Framework arguments:  -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -product org.eclipse.epp.package.java.product -data file:/Users/johnhodson/GitHub/object-oriented-programming/ -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-
-!ENTRY org.eclipse.core.net 1 0 2019-01-17 14:25:18.241
-!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
-!SESSION 2019-01-18 14:00:39.975 -----------------------------------------------
-eclipse.buildId=4.6.2.M20161124-1400
-java.version=1.8.0_191
-java.vendor=Oracle Corporation
-BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
-Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-
-!ENTRY org.eclipse.core.net 1 0 2019-01-18 14:00:48.889
-!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
-!SESSION 2019-01-21 14:12:32.515 -----------------------------------------------
-eclipse.buildId=4.6.2.M20161124-1400
-java.version=1.8.0_191
-java.vendor=Oracle Corporation
-BootLoader constants: OS=macosx, ARCH=x86_64, WS=cocoa, NL=en_US
-Framework arguments:  -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-Command-line arguments:  -os macosx -ws cocoa -arch x86_64 -product org.eclipse.epp.package.java.product -keyring /Users/johnhodson/.eclipse_keyring
-
-!ENTRY org.eclipse.core.net 1 0 2019-01-21 14:13:11.467
-!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2019-02-23 22:05:25.444
+!MESSAGE Server returned lastModified <= 0 for https://raw.github.com/guari/eclipse-ui-theme/master/com.github.eclipseuitheme.themes.updatesite/content.jar

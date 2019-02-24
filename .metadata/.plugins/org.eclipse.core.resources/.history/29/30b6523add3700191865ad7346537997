@@ -1,0 +1,12 @@
+package course.oop.main;
+
+import course.oop.controller.*;
+
+public class TTTDriver {
+
+	public static void main(String[] args) {
+		TTTControllerInterface controller = new TTTControllerImpl();
+		
+		System.out.println("Hello world!");
+	}
+}

@@ -1,0 +1,22 @@
+package course.oop.controller;
+
+public class GameInProgressException extends RuntimeException {
+
+	/**
+	 * TODO, auto generated
+	 */
+	private String message;
+
+	public GameNotStartedException(String message){
+	    this.message = message;
+	}
+
+	public GameNotStartedException() {
+		this.message  = "";
+	}
+	
+	@Override
+	public String toString() {
+		return "GameNotStartedException: " + message;
+	}
+}
