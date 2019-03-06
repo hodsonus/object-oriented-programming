@@ -1,0 +1,19 @@
+package course.oop.other;
+
+public class TopBoard extends Board<BottomBoard> {
+
+    public TopBoard() {
+    }
+
+	@Override
+	public String draw() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void resetBoard() {
+		// TODO Auto-generated method stub
+		
+	}
+}

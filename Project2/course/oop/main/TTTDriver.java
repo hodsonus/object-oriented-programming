@@ -1,6 +1,7 @@
 package course.oop.main;
 
 import course.oop.controller.*;
+import course.oop.other.BottomBoard;
 
 public class TTTDriver {
 
@@ -23,33 +24,34 @@ public class TTTDriver {
 		System.out.println(ticTacToe.getGameDisplay());
 		
 		//play game
-		isSelectionValid = ticTacToe.setSelection(0, 0, 1);
+		isSelectionValid = ticTacToe.setSelection(0, 0, 2);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
-		isSelectionValid = ticTacToe.setSelection(0, 2, 2);
+		isSelectionValid = ticTacToe.setSelection(0, 2, 1);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
-		isSelectionValid = ticTacToe.setSelection(1, 0, 1);
+		isSelectionValid = ticTacToe.setSelection(1, 0, 2);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
-		isSelectionValid = ticTacToe.setSelection(1, 2, 2);
+		isSelectionValid = ticTacToe.setSelection(1, 2, 1);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
-		isSelectionValid = ticTacToe.setSelection(2, 0, 1);
+		isSelectionValid = ticTacToe.setSelection(2, 0, 2);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
 		
 		//determine winner
 		int winner = ticTacToe.determineWinner();
-		if(winner==1) {
-			System.out.println(player_1 + " won the game!!");
+		if(winner==2) {
+			System.out.println(player_2 + " won the game!!");
 		}else {
 			System.out.println("Failed Test Case");
 		}
 	}
 	
 	public static void myMain() {
-		
+		BottomBoard uut = new BottomBoard();
+		System.out.println(uut);
 	}
 	
 	public static void main(String[] args) {

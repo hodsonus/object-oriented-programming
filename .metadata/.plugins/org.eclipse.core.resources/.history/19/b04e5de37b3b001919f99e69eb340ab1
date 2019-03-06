@@ -1,0 +1,15 @@
+package course.oop.other;
+
+public class OnePair implements Pair {
+	
+    /**
+     * Default constructor
+     */
+    public OnePair(int row, int col) {
+    	this.row = row;
+    	this.col = col;
+    }
+    
+    public int col;
+    public int row;
+}

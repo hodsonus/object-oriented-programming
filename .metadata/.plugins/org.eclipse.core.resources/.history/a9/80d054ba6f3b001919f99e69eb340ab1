@@ -1,0 +1,30 @@
+package course.oop.other;
+
+public class Square {
+
+    public Square() {
+    	status = SquareStatus.vacant;
+    	player = null;
+    }
+    
+    private SquareStatus status;
+    private Player player;
+
+    /**
+     * @return the status of Square
+     */
+    public SquareStatus getStatus() {
+        return status;
+    }
+
+    public void setPlayerOccupation(Player player) {
+    	if (status != SquareStatus.vacant) throw new InvalidMoveException();
+    	status = SquareStatus.occupied;
+    	this.player = player;
+    }
+    
+    @Override
+    public String toString() {
+    	return marker;
+    }
+}

@@ -1,0 +1,17 @@
+package course.oop.other;
+
+public abstract class Board<T> {
+
+    /**
+     * Default constructor
+     */
+    public Board() {
+    }
+
+    protected T[] grid;    
+    protected OnePair nextPos;
+
+    public boolean checkValidMove();
+    public abstract void executeMove(Pair move);
+    public abstract String draw();
+}

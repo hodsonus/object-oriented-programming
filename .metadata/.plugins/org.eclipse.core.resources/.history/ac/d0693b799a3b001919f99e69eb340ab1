@@ -1,0 +1,49 @@
+package course.oop.other;
+
+import java.util.List;
+
+public abstract class Board<T> {
+
+    public Board() {
+    	nextPos = null;
+    }
+
+    protected T[][] grid;    
+    protected OnePair nextPos;
+    protected GameStatus status;
+
+    
+	public GameStatus updateStatus(Pair lastMove) {
+		OnePair move = (OnePair)(lastMove);
+		//check THIS row
+		
+		//check THIS column
+		
+		//check THIS diagonal ()
+		
+		//TODO
+		return null;
+	}
+	
+    protected List<OnePair> getRow(OnePair pair) {
+		if (RowColDia.rowA.contains(pair)) return RowColDia.rowA;
+		else if (RowColDia.rowB.contains(pair)) return RowColDia.rowB;
+		else if (RowColDia.rowC.contains(pair)) return RowColDia.rowC;
+    }
+	
+    protected List<OnePair> getRow(OnePair pair) {
+		if (RowColDia.rowA.contains(pair)) return RowColDia.rowA;
+		else if (RowColDia.rowB.contains(pair)) return RowColDia.rowB;
+		else if (RowColDia.rowC.contains(pair)) return RowColDia.rowC;
+    }
+	
+    protected List<OnePair> getRow(OnePair pair) {
+		if (RowColDia.rowA.contains(pair)) return RowColDia.rowA;
+		else if (RowColDia.rowB.contains(pair)) return RowColDia.rowB;
+		else if (RowColDia.rowC.contains(pair)) return RowColDia.rowC;
+    }
+    
+    public abstract String draw();
+	public abstract void resetBoard();
+	public abstract boolean attemptMove(Player player, Pair move);
+}

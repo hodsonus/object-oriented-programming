@@ -1,0 +1,18 @@
+package course.oop.other;
+
+public abstract class Board<T> {
+
+    public Board() {
+    	nextPos = null;
+    }
+
+    protected T[][] grid;    
+    protected OnePair nextPos;
+    protected GameStatus status;
+
+    
+    protected abstract GameStatus updateStatus(Pair lastMoev);
+    public abstract String draw();
+	public abstract void resetBoard();
+	public abstract boolean attemptMove(Player player, Pair move);
+}

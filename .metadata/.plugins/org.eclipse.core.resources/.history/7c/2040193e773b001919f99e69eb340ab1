@@ -1,0 +1,20 @@
+package course.oop.other;
+
+public abstract class Board<T> {
+
+    public Board() {
+    	nextPos = null;
+    }
+
+    protected T[][] grid;    
+    protected OnePair nextPos;
+
+    public abstract boolean checkValidMove();
+    public abstract void executeMove(Pair move);
+    public abstract String draw();
+	public abstract void resetBoard();
+	public abstract boolean attemptMove(Pair move) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+}

@@ -1,0 +1,12 @@
+package course.oop.other;
+
+public final class RowColDia {
+	public static final OnePair[]  rowA = {new OnePair(2,0), new OnePair(2,1), new OnePair(2,2)};
+	public static final OnePair[]  rowB = 
+	public static final OnePair[]  rowC = 
+	public static final OnePair[]  colA = 
+	public static final OnePair[]  colB = 
+	public static final OnePair[]  colC = 
+	public static final OnePair[] diagA = 
+	public static final OnePair[] diagB = 
+}

@@ -29,8 +29,28 @@ public class UltTicTacToe extends TicTacToe<TopBoard> {
         "remaining, in which case the game is a draw.";
     }
 
-    @Override
-    public String play() {
-        return "";
-    }
+	@Override
+	public boolean attemptMove(Player currentPlayerObj, Pair pair) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean attemptMove(Player currentPlayerObj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String getDisplay() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected GameStatus updateStatus(Pair pair) {
+		// TODO Auto-generated method stub
+		//iterate over bottomboards and check the status
+		return null;
+	}
 }

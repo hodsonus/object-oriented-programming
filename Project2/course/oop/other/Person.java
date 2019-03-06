@@ -12,7 +12,7 @@ public class Person extends Player {
 //    }
 
 	public Person(String username, String marker) {
-		// TODO Auto-generated constructor stub
+		super(username, marker);
 	}
 
 	/**

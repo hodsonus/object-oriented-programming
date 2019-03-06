@@ -1,0 +1,29 @@
+package course.oop.other;
+
+public class BottomBoard extends Board<Square> {
+	
+    /**
+     * Default constructor
+     */
+    public BottomBoard() {
+    }
+
+	@Override
+	public boolean checkValidMove() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void executeMove(Pair move) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String draw() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

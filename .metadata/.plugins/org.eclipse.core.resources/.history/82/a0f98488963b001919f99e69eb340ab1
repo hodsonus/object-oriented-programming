@@ -1,0 +1,12 @@
+package course.oop.other;
+
+public final class RowColDia {
+	public static final List<OnePair> rowA = 
+	public static final  rowB = 
+	public static final  rowC = 
+	public static final  colA = 
+	public static final  colB = 
+	public static final  colC = 
+	public static final diagA = 
+	public static final diagB = 
+}

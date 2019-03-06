@@ -5,10 +5,8 @@ package course.oop.other;
  */
 public class AI extends Player {
 
-    /**
-     * Default constructor
-     */
-    public AI() {
+    public AI(String username, String marker) {
+    	super(username, marker);
     }
 
     /**

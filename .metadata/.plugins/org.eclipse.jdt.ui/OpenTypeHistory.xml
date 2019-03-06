@@ -1,8 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<typeInfoHistroy>
-<typeInfo handle="=Project2/&lt;course.oop.controller{TTTControllerInterface.java[TTTControllerInterface" modifiers="513" timestamp="1550975258000"/>
-<typeInfo handle="=Project2/&lt;course.oop.other{Pair.java[Pair" modifiers="513" timestamp="1550976674000"/>
-<typeInfo handle="=Project2/&lt;course.oop.other{Player.java[Player" modifiers="1025" timestamp="1550976445000"/>
-<typeInfo handle="=Project2/&lt;course.oop.other{TicTacToe.java[TicTacToe" modifiers="1025" timestamp="1550976568000"/>
-<typeInfo handle="=Project2/&lt;course.oop.other{Board.java[Board" modifiers="1025" timestamp="1550976842000"/>
-</typeInfoHistroy>
+<typeInfoHistroy/>

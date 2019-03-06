@@ -1,0 +1,10 @@
+package course.oop.other;
+
+public enum GameStatus {
+    before,
+    ongoing,
+    playerOneVictory,
+    playerTwoVictory,
+    draw,
+    quit
+}

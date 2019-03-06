@@ -1,0 +1,64 @@
+package course.oop.other;
+
+public class BottomBoard extends Board<Square> {
+	
+    public BottomBoard() {
+    	resetBoard();
+    }
+
+	@Override
+	public boolean checkValidMove() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void executeMove(Pair move) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+/*
+  
+  
+  
+  
+ 
+      |     |     \n   *  |  *  |  *  \n _____|_____|_____\n      |     |     \n   *  |  *  |  *  \n _____|_____|_____\n      |     |     \n   *  |  *  |  *  \n      |     |    
+
+
+*  |  *  |  *  \n _____|_____|_____\n      |     |     \n   *  |  *  |  *  \n _____|_____|_____\n      |     |     \n   *  |  *  |  *  \n      |     |    
+
+
+ */
+	
+	
+	
+	
+	
+	
+	
+	@Override
+	public String draw() {
+		StringBuilder drawing = new StringBuilder("      |     |     \n   ");
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid.length; j++) {
+				drawing.append(grid[i][j].toString());
+			}
+			drawing.append("\n");
+		}
+		return drawing.toString();
+	}
+	
+	@Override
+	public void resetBoard() {
+    	grid = new Square[3][3];
+    	for (int i = 0; i < grid.length; i++) {
+    		for (int j = 0; j < grid[i].length; j++) {
+    			grid[i][j] = new Square();
+    		}
+    	}
+	}
+
+}

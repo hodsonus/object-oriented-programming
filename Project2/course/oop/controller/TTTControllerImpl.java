@@ -2,16 +2,7 @@ package course.oop.controller;
 
 import java.util.Scanner;
 import course.oop.other.*;
-
-/**
- * You can and should have other members (properties or functions) 
- * in your controller, but the functions provided in 
- * TTTControllerInterface.java are required.
- * 
- * Create a class called TTTControllerImpl.java and implement the 
- * methods in this interface.
- * 
- */
+import course.oop.other.exceptions.GameInProgressException;
 
 public class TTTControllerImpl implements TTTControllerInterface {
 	
@@ -20,7 +11,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	private TicTacToe game;
 	private Scanner sc;
 	private int numPlayers, timeoutInSecs;
-	private boolean gameInProgress;
+	private long startTime;
 	
 	public TTTControllerImpl(Scanner sc) {
 		this.sc = sc;
@@ -28,7 +19,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		this.player2 = null;
 		this.numPlayers = -1;
 		this.game = null;
-		this.gameInProgress = false;
 	}
 	
 	public TTTControllerImpl() {
@@ -52,26 +42,26 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		this.numPlayers = numPlayers;
 		fillEmptyPlayers();
 				
-        System.out.println("Hello! Would you like to play Ultimate Tic Tac Toe, or just Basic Tic Tac Toe?");
-		String response;
-        do {
-            System.out.println("Type \"Ultimate\" for the former or \"Basic\" for the latter.");
-            response = sc.nextLine().toLowerCase(); 
-        } while(!response.equals("ultimate") && !response.equals("basic"));
-        System.out.println("Thanks! Trying that out now...");
-
-        if (response.equals("ultimate"))
-            game = new UltTicTacToe();
-        else //(response.equals("basic"))
+		//TODO, this is the logic for selecting between Ultimate Tic Tac Toe and Basic Tic Tac Toe
+//        System.out.println("Hello! Would you like to play Ultimate Tic Tac Toe, or just Basic Tic Tac Toe?");
+//		String response;
+//        do {
+//            System.out.println("Type \"Ultimate\" for the former or \"Basic\" for the latter.");
+//            response = sc.nextLine().toLowerCase(); 
+//        } while(!response.equals("ultimate") && !response.equals("basic"));
+//        System.out.println("Thanks! Trying that out now...");
+//
+//        if (response.equals("ultimate"))
+//            game = new UltTicTacToe();
+//        else //(response.equals("basic"))
             game = new BasicTicTacToe();
 		
-        this.gameInProgress = true;
-        //TODO, set the timer beginning
-	}
+        writeStartTime();
+    }
 	
 	private void fillEmptyPlayers() {
-		if (player1 == null) player1 = new AI();
-		if (player2 == null) player2 = new AI();
+		if (player1 == null) player1 = new AI("SuperDuperAI", "@");
+		if (player2 == null) player2 = new AI("SuperDuperAI", "@");
 	}
 	
 	private boolean validNumPlayer(int numPlayers) {
@@ -88,7 +78,10 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 */
 	@Override
 	public void createPlayer(String username, String marker, int playerNum) {
-		if (this.gameInProgress) throw new GameInProgressException();
+		
+		/* this line below PROBABLY shouldnt be in here but I was forced to do this becasue of the interface that I was locked into implementing */
+		if (game != null) throw new GameInProgressException();
+		
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
 		
 		if (playerNum == 1) player1 = new Person(username, marker);
@@ -106,11 +99,13 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 */
 	@Override
 	public boolean setSelection(int row, int col, int currentPlayer) {
-		if (!this.gameInProgress) throw new GameNotStartedException();
+		if (!validUserTurnLength()) throw new RuntimeException("User took too long to provide input to program.");
 		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
 		
 		Player currentPlayerObj;
 		
+		
+		//TODO, i dont think I want this logic in here tbh
 		if (currentPlayer == 1) {
 			if (player1 instanceof AI) throw new InvalidAIOperation();
 			currentPlayerObj = player1;
@@ -120,16 +115,15 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			currentPlayerObj = player2;
 		}
 
-		//TODO
-		return false;
+		return game.attemptMove(currentPlayerObj, new OnePair(row, col));
 	}
 	
-	public boolean makeAISelection(int currentPlayer) {
-		if (!this.gameInProgress) throw new GameNotStartedException();
+	public void makeAISelection(int currentPlayer) {
 		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
 		
 		Player currentPlayerObj;
 		
+		//TODO, i dont think I want this logic in here tbh
 		if (currentPlayer == 1) {
 			if (player1 instanceof Person) throw new InvalidPersonOperation();
 			currentPlayerObj = player1;
@@ -139,8 +133,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			currentPlayerObj = player2;
 		}
 
-		//TODO
-		return false;
+		game.attemptMove(currentPlayerObj);
 	}
 
 	/**
@@ -155,11 +148,11 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 */
 	@Override
 	public int determineWinner() {
-		if (!this.gameInProgress) throw new GameNotStartedException();
-		
 		if (!game.isOver()) return 0;
-		if (game.oneWon()) return 1;
-		if (game.twoWon()) return 2;
+		if (game.isOver()) {
+			if (game.isVictorious(player1)) return 1;
+			if (game.isVictorious(player2)) return 2;
+		}
 		return 3;
 	}
 
@@ -171,7 +164,15 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 */
 	@Override
 	public String getGameDisplay() {
-		if (!this.gameInProgress) throw new GameNotStartedException();
-		else return game.getDisplay();
+		return game.getDisplay();
+	}
+	
+	private void writeStartTime() {
+		startTime = System.nanoTime();
+	}
+	
+	private boolean validUserTurnLength() {
+		if (timeoutInSecs <= 0) return true;
+		return (System.nanoTime() - startTime)/(Math.pow(10, 9)) < timeoutInSecs;
 	}
 }

@@ -2,8 +2,7 @@ package course.oop.other;
 
 public enum SquareStatus {
     vacant,
-    occupiedP1,
-    occupiedP2,
+    occupied,
     unpickable,
     neutral
 }

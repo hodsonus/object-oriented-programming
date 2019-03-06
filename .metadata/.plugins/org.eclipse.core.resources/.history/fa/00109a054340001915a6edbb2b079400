@@ -1,0 +1,73 @@
+package course.oop.other;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Board<T> {
+
+    public Board() {
+    	nextPos = null;
+    }
+
+    protected T[][] grid;    
+    protected OnePair nextPos;
+    protected GameStatus status;
+
+    
+	public GameStatus updateStatus(Pair lastMove) {
+		OnePair move = (OnePair)(lastMove);
+		
+		//check THIS row
+		List<OnePair> row = getRow(move);
+		
+		//check THIS column
+		List<OnePair> col = getCol(move);
+		
+		//check diagonals (this move either belongs to the left diagonal, the right diagonal, both diagonals, or neither diagonals)
+		List<ArrayList<OnePair>> diags = getDiag(move);
+
+		for (OnePair pair : row) {
+			//check each element to see if they are the same player
+		}
+		
+		for (OnePair pair : col) {
+			//check each element to see if they are the same player
+		}
+		
+		for (ArrayList<OnePair> diag : diags) {
+			for (OnePair pair : diag) {
+				
+			}
+		}
+		
+		
+		
+		
+		return status;
+	}
+	
+    protected List<OnePair> getRow(OnePair pair) {
+		if      (RowColDia.rowA.contains(pair)) return RowColDia.rowA;
+		else if (RowColDia.rowB.contains(pair)) return RowColDia.rowB;
+		else if (RowColDia.rowC.contains(pair)) return RowColDia.rowC;
+		return null; // this should NEVER happen. null pointer exceptions here imply something else is VERY wrong with the state elsewhere
+    }
+	
+    protected List<OnePair> getCol(OnePair pair) {
+		if      (RowColDia.colA.contains(pair)) return RowColDia.colA;
+		else if (RowColDia.colB.contains(pair)) return RowColDia.colB;
+		else if (RowColDia.colC.contains(pair)) return RowColDia.colC;
+		return null; // this should NEVER happen. null pointer exceptions here imply something else is VERY wrong with the state elsewhere
+    }
+	
+    protected ArrayList<ArrayList<OnePair>> getDiag(OnePair pair) {
+    	ArrayList<List<OnePair>> diagList = new ArrayList<List<OnePair>>();
+		if      (RowColDia.diagA.contains(pair)) diagList.add(RowColDia.diagA);
+		else if (RowColDia.diagB.contains(pair)) diagList.add(RowColDia.diagB);
+		return diagList;
+    }
+    
+    public abstract String draw();
+	public abstract void resetBoard();
+	public abstract boolean attemptMove(Player player, Pair move);
+}
