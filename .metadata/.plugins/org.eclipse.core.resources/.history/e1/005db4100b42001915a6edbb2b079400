@@ -1,0 +1,21 @@
+package course.oop.other;
+
+/**
+ * 
+ */
+public class AI extends Player {
+
+    public AI(String username, String marker) {
+    	if (marker.length() != 1)
+    	super(username, marker);
+    }
+
+    /**
+     * @return
+     */
+    public Pair requestMove() {
+        // TODO implement here
+        return null;
+    }
+
+}

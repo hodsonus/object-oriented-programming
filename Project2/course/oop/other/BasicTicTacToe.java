@@ -1,11 +1,25 @@
 package course.oop.other;
 
-import course.oop.other.exceptions.GameNotStartedException;
+import course.oop.other.exceptions.GameNotInProgressException;
 
 public class BasicTicTacToe extends TicTacToe<BottomBoard> {
 
     public BasicTicTacToe() {
     	board = new BottomBoard();
+    	updateStatus();
+    }
+    
+    @Override
+    public void resetGame() {
+    	board = new BottomBoard();
+    	updateStatus();
+    }
+    
+    @Override
+    public void quitGame() {
+		if (this.status == GameStatus.quit) throw new GameNotInProgressException();
+       	board.quit();
+       	updateStatus();
     }
 
     @Override
@@ -18,7 +32,7 @@ public class BasicTicTacToe extends TicTacToe<BottomBoard> {
 
 	@Override
 	public boolean attemptMove(Player currentPlayerObj, Pair pair) {
-		if (board == null) throw new GameNotStartedException();
+		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
 		boolean validMove = board.attemptMove(currentPlayerObj, pair);
 		if (validMove) updateStatus(pair);
 		return validMove;
@@ -26,26 +40,31 @@ public class BasicTicTacToe extends TicTacToe<BottomBoard> {
 
 	@Override
 	protected GameStatus updateStatus(Pair pair) {
-		status = board.updateStatus(pair);
+		this.status = board.updateStatus(pair);
+		winningPlayer = board.getWinningPlayer();
+		return status;
+	}
+	
+	protected GameStatus updateStatus() {
+		this.status = board.getStatus();
 		winningPlayer = board.getWinningPlayer();
 		return status;
 	}
 
 	@Override
 	public boolean attemptMove(Player currentPlayerObj) {
-		//TODO this is probably bad practice, let's rethink this
 		int row, col, iter = 0, max_iter=10000;
 		do {
 			row = randInt(0,2);
 			col = randInt(0,2);
 			iter++;
-		} while(   !attemptMove(currentPlayerObj, new OnePair(row, col)) || iter<max_iter   );
+		} while(   !attemptMove(currentPlayerObj, new OnePair(row, col)) && iter<max_iter   );
 		return true;
 	}
 
 	@Override
 	public String getDisplay() {
-		if (board == null) throw new GameNotStartedException();
+		if (board == null) throw new GameNotInProgressException();
 		return board.toString();
 	} 
 	

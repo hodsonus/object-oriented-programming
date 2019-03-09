@@ -2,9 +2,6 @@ package course.oop.other.exceptions;
 
 public class InvalidMoveException extends RuntimeException {
 
-	/**
-	 * TODO, auto generated
-	 */
 	private static final long serialVersionUID = 1628594511919126856L;
 	private String message;
 

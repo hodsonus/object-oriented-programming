@@ -1,0 +1,19 @@
+package course.oop.other.exceptions;
+
+public class InvalidMarkerException extends RuntimeException {
+
+	private String message;
+
+	public InvalidMarkerException(String message){
+	    this.message = message;
+	}
+
+	public InvalidMarkerException() {
+		this.message  = "";
+	}
+	
+	@Override
+	public String toString() {
+		return "InvalidMarkerException: " + message;
+	}
+}

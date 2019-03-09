@@ -53,4 +53,16 @@ public class UltTicTacToe extends TicTacToe<TopBoard> {
 		//iterate over bottomboards and check the status
 		return null;
 	}
+
+	@Override
+	public void resetGame() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void quitGame() {
+		// TODO Auto-generated method stub
+		
+	}
 }

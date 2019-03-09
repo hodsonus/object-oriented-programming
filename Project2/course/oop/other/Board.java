@@ -19,7 +19,7 @@ public abstract class Board<T> {
     	return winningPlayer;
     }
     
-	public abstract GameStatus updateStatus(Pair lastMove);
+	protected abstract GameStatus updateStatus(Pair lastMove);
 	
     protected List<OnePair> getRow(OnePair pair) {
 		if      (RowColDia.rowA.contains(pair)) return RowColDia.rowA;

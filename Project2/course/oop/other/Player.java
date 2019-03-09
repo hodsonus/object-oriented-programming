@@ -1,8 +1,11 @@
 package course.oop.other;
 
+import course.oop.other.exceptions.InvalidMarkerException;
+
 public abstract class Player {
 
     public Player(String username, String marker) {
+    	if (marker.length() != 1) throw new InvalidMarkerException();
     	if (playerRecordExists(username)) restorePlayer(username, marker);
     	else createNewPlayer(username, marker);
     }

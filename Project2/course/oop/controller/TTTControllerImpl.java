@@ -1,6 +1,5 @@
 package course.oop.controller;
 
-import java.util.Scanner;
 import course.oop.other.*;
 import course.oop.other.exceptions.GameInProgressException;
 
@@ -9,20 +8,14 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	private Player player1, player2;
 	@SuppressWarnings("rawtypes")
 	private TicTacToe game;
-	private Scanner sc;
 	private int numPlayers, timeoutInSecs;
 	private long startTime;
 	
-	public TTTControllerImpl(Scanner sc) {
-		this.sc = sc;
+	public TTTControllerImpl() {
 		this.player1 = null;
 		this.player2 = null;
 		this.numPlayers = -1;
 		this.game = null;
-	}
-	
-	public TTTControllerImpl() {
-		this(new Scanner(System.in));
 	}
 
 	/**
@@ -55,13 +48,20 @@ public class TTTControllerImpl implements TTTControllerInterface {
 //            game = new UltTicTacToe();
 //        else //(response.equals("basic"))
             game = new BasicTicTacToe();
-		
         writeStartTime();
     }
 	
+	public void quitGame() {
+		game.quitGame();
+	}
+	
+	public void resetGame() {
+		game.resetGame();
+	}
+	
 	private void fillEmptyPlayers() {
-		if (player1 == null) player1 = new AI("SuperDuperAI", "@");
-		if (player2 == null) player2 = new AI("SuperDuperAI", "@");
+		if (player1 == null) player1 = new AI("SuperDuperAIOne", "@");
+		if (player2 == null) player2 = new AI("SuperDuperAITwo", "$");
 	}
 	
 	private boolean validNumPlayer(int numPlayers) {
@@ -79,13 +79,22 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	@Override
 	public void createPlayer(String username, String marker, int playerNum) {
 		
-		/* this line below PROBABLY shouldnt be in here but I was forced to do this becasue of the interface that I was locked into implementing */
-		if (game != null) throw new GameInProgressException();
+		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
 		
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
 		
 		if (playerNum == 1) player1 = new Person(username, marker);
 		else player2 = new Person(username, marker);
+	}
+	
+public void createAI(String username, String marker, int playerNum) {
+		
+		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
+		
+		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
+		
+		if (playerNum == 1) player1 = new AI(username, marker);
+		else player2 = new AI(username, marker);
 	}
 
 	/**
@@ -104,8 +113,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		
 		Player currentPlayerObj;
 		
-		
-		//TODO, i dont think I want this logic in here tbh
 		if (currentPlayer == 1) {
 			if (player1 instanceof AI) throw new InvalidAIOperation();
 			currentPlayerObj = player1;
@@ -114,16 +121,15 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			if (player2 instanceof AI) throw new InvalidAIOperation();
 			currentPlayerObj = player2;
 		}
-
 		return game.attemptMove(currentPlayerObj, new OnePair(row, col));
 	}
 	
 	public void makeAISelection(int currentPlayer) {
+		if (!validUserTurnLength()) throw new RuntimeException("User took too long to provide input to program.");
 		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
 		
 		Player currentPlayerObj;
 		
-		//TODO, i dont think I want this logic in here tbh
 		if (currentPlayer == 1) {
 			if (player1 instanceof Person) throw new InvalidPersonOperation();
 			currentPlayerObj = player1;
@@ -132,7 +138,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			if (player2 instanceof Person) throw new InvalidPersonOperation();
 			currentPlayerObj = player2;
 		}
-
+		writeStartTime();
 		game.attemptMove(currentPlayerObj);
 	}
 
@@ -167,7 +173,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		return game.getDisplay();
 	}
 	
-	private void writeStartTime() {
+	public void writeStartTime() {
 		startTime = System.nanoTime();
 	}
 	

@@ -1,0 +1,43 @@
+package course.oop.other;
+
+import java.util.Scanner;
+
+import course.oop.other.exceptions.GameInProgressException;
+import course.oop.other.exceptions.GameNotInProgressException;
+
+public abstract class TicTacToe<E> {
+
+    private Scanner sc;
+    protected E board;
+    protected GameStatus status;
+    protected Player winningPlayer;
+
+    public TicTacToe() {
+        this(new Scanner(System.in));
+    }
+    
+    public TicTacToe(Scanner sc) {
+    	this.sc = sc;
+    }
+
+    public boolean isInProgress() {
+		return status == GameStatus.ongoing;
+	}
+ 
+    public boolean isVictorious(Player didTheyWin) {
+    	if (didTheyWin == null && this.winningPlayer == null) return true;
+    	if (didTheyWin != null) return didTheyWin.equals(this.winningPlayer);
+    	else return false;
+    }
+    
+    /* the game is over if player one won, player two won, the game ended in a draw, or was quit */
+    public boolean isOver() {
+    	return status == GameStatus.victory || status == GameStatus.draw || status == GameStatus.quit;
+    }
+    
+    protected abstract GameStatus updateStatus(Pair pair);
+    public abstract boolean attemptMove(Player currentPlayerObj, Pair pair);
+	public abstract boolean attemptMove(Player currentPlayerObj);
+    public abstract String getRules();
+	public abstract String getDisplay();
+}

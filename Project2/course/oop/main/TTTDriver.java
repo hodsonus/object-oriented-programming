@@ -1,7 +1,7 @@
 package course.oop.main;
 
+import java.util.Scanner;
 import course.oop.controller.*;
-import course.oop.other.BottomBoard;
 
 public class TTTDriver {
 
@@ -40,6 +40,10 @@ public class TTTDriver {
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
 		
+		isSelectionValid = ticTacToe.setSelection(1, 1, 2);
+		checkForInvalidLocation(isSelectionValid);
+		System.out.println(ticTacToe.getGameDisplay());
+		
 		//determine winner
 		int winner = ticTacToe.determineWinner();
 		if(winner==2) {
@@ -50,12 +54,185 @@ public class TTTDriver {
 	}
 	
 	public static void myMain() {
-		BottomBoard uut = new BottomBoard();
-		System.out.println(uut);
+		Scanner sc = new Scanner(System.in);
+		String outsideGameOptions = "1. Set player 1.\n"
+									+ "2. Set player 2.\n"
+									+ "3. Start new game.\n"
+									+ "4. Quit the program.\n"
+									+ "Input the number of the choice that you desire.";
+		String inGameOptions = "1. Play turn.\n"
+							 + "2. Reset Game.\n"
+							 + "3. Quit Game.";
+		String choice;
+		TTTControllerImpl ticTacToe = new TTTControllerImpl();;
+		boolean player1isAI = true, player2isAI = true;
+		
+		System.out.println("Welcome to Tic Tac Toe! Please read the following prompt and select a choice from the menu.\nThe choices are as follows:");
+		while (true) {
+			System.out.println(outsideGameOptions);
+			System.out.print("choice: ");
+			choice = sc.nextLine();
+			if (choice.equals("1")) { // 1 - Set player 1.
+				player1isAI = setPlayerX(1, sc, ticTacToe);
+			}
+			else if (choice.equals("2")) { // 2 - Set player 2.
+				player2isAI = setPlayerX(2,sc,ticTacToe);
+			}
+			else if (choice.equals("3")) { // 3 - Start new game.
+				String timerChoice;
+				do {
+					System.out.println("Would you like to play with a timer? Input \"yes\" or \"no\".");
+					timerChoice = sc.nextLine();
+				} while (!timerChoice.equals("yes") && !timerChoice.equals("no"));
+				Integer timerLength = null;
+				if (timerChoice.equals("yes")) {
+					do {
+						System.out.println("Input a valid integer to be the length of the timer.");
+						try {
+							timerLength = Integer.valueOf(sc.nextLine());
+						}
+						catch (NumberFormatException e) {
+							timerLength = null;
+							System.out.println("That was not a valid integer.");
+						}
+						
+					} while(timerLength == null);
+				}
+				else {
+					timerLength = 0;
+				}
+				ticTacToe.startNewGame(2, timerLength);
+				boolean isSelectionValid, player1Turn = true;
+				while (true) {
+					System.out.println(ticTacToe.getGameDisplay());
+					System.out.println(inGameOptions);
+					System.out.print("choice: ");
+					choice = sc.nextLine();
+					if (choice.equals("1")) { // 3.1 - Play this turn.
+						if (player1Turn) {
+							if (player1isAI) {
+								ticTacToe.writeStartTime();
+								isSelectionValid = true;
+								ticTacToe.makeAISelection(1);
+							}
+							else {
+								try {
+									ticTacToe.writeStartTime();
+									isSelectionValid = getPlayerXsTurn(1, sc, ticTacToe);
+								}
+								catch (RuntimeException e) {
+									System.out.println("Player took too long to supply input! Forfeiting turn...");
+									isSelectionValid = true;
+								}
+							}
+							if (!isSelectionValid) continue;
+						}
+						else {
+							if (player2isAI) {
+								ticTacToe.writeStartTime();
+								isSelectionValid = true;
+								ticTacToe.makeAISelection(2);
+							}
+							else {
+								try {
+									ticTacToe.writeStartTime();
+									isSelectionValid = getPlayerXsTurn(2, sc, ticTacToe);
+								}
+								catch (RuntimeException e) {
+									System.out.println("Player took too long to supply input! Forfeiting turn...");
+									isSelectionValid = true;
+								}
+							}
+							if (!isSelectionValid) continue;
+						}
+						player1Turn = !player1Turn;
+						int winner = ticTacToe.determineWinner();
+						if (winner != 0) {
+							System.out.println("\n\n\n\n\n");
+							if (winner == 1) {
+								System.out.println("Player 1 has won!");
+							}
+							if (winner == 2) {
+								System.out.println("Player 2 has won!");
+							}
+							if (winner == 3) {
+								System.out.println("It's a draw!");
+							}
+							System.out.println(ticTacToe.getGameDisplay());
+							break;
+						}
+					}
+					else if (choice.equals("2")) { // 3.2 - Reset the game.
+						ticTacToe.resetGame();
+						player1Turn = true;
+					}
+					else if (choice.equals("3")) { // 3.3 - Quit the game.
+						ticTacToe.quitGame();
+						break;
+					}
+				}
+			}
+			else if (choice.equals("4")) { // 4 - Quit the program.
+				break;
+			}	
+		}
 	}
 	
+	private static boolean setPlayerX(int x, Scanner sc, TTTControllerImpl ticTacToe) {
+				
+		System.out.println("Please input Player " + x + "'s username on the first line and their marker on the second line. Note that their username can consist of any alphanumeric characters of any length. Their marker must consist of only ONE alphanumeric character.");
+		System.out.print("username: ");
+		String username = sc.nextLine();
+		System.out.print("marker: ");
+		String marker = sc.nextLine();
+		
+		String isAI;
+		do {
+			System.out.println("Should Player " + x + " be an AI? Type \"yes\" or \"no\".");
+			isAI = sc.nextLine();
+		} while (!isAI.equals("yes") && !isAI.equals("no"));
+		
+		boolean playerisAI;
+		if (isAI.equals("yes")) playerisAI = true;
+		else playerisAI = false;
+		
+		if (playerisAI) {
+			ticTacToe.createAI(username, marker, x);
+		}
+		else {
+			ticTacToe.createPlayer(username, marker, x);
+		}
+		
+		return playerisAI;
+	}
+
 	public static void main(String[] args) {
-		sampleTestCase();
+		myMain();
 	}
 	
+	private static int getPos(Scanner sc) {
+		Integer pos = null;
+		while (pos == null) {
+			try {
+				pos = Integer.valueOf(sc.nextLine());
+			}
+			catch (NumberFormatException e) {
+				System.out.println("That was not a valid position");
+				pos = null;
+			}
+		}
+		return pos;
+	}
+	
+	private static boolean getPlayerXsTurn(int x, Scanner sc, TTTControllerImpl ticTacToe) {
+		if (x != 0 && x != 1) throw new IllegalArgumentException("Player number must be either 1 or 2.");
+		
+		System.out.println("Player " + x + "'s turn!");
+		System.out.println("Supply the row, followed by the column of your choice.");
+		System.out.print("row: ");
+		int row = getPos(sc);
+		System.out.print("col: ");
+		int col = getPos(sc);
+		return ticTacToe.setSelection(row, col, x);
+	}
 }
