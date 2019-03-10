@@ -2,6 +2,7 @@ package course.oop.controller;
 
 import course.oop.other.*;
 import course.oop.other.exceptions.GameInProgressException;
+import course.oop.other.exceptions.TurnTimeoutException;
 
 public class TTTControllerImpl implements TTTControllerInterface {
 	
@@ -108,7 +109,7 @@ public void createAI(String username, String marker, int playerNum) {
 	 */
 	@Override
 	public boolean setSelection(int row, int col, int currentPlayer) {
-		if (!validUserTurnLength()) throw new RuntimeException("User took too long to provide input to program.");
+		if (!validUserTurnLength()) throw new TurnTimeoutException("User took too long to provide input to program.");
 		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
 		
 		Player currentPlayerObj;
@@ -125,7 +126,7 @@ public void createAI(String username, String marker, int playerNum) {
 	}
 	
 	public void makeAISelection(int currentPlayer) {
-		if (!validUserTurnLength()) throw new RuntimeException("User took too long to provide input to program.");
+		if (!validUserTurnLength()) throw new TurnTimeoutException("User took too long to provide input to program.");
 		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
 		
 		Player currentPlayerObj;

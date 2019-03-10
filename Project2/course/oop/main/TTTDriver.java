@@ -2,6 +2,7 @@ package course.oop.main;
 
 import java.util.Scanner;
 import course.oop.controller.*;
+import course.oop.other.exceptions.TurnTimeoutException;
 
 public class TTTDriver {
 
@@ -120,7 +121,7 @@ public class TTTDriver {
 									ticTacToe.writeStartTime();
 									isSelectionValid = getPlayerXsTurn(1, sc, ticTacToe);
 								}
-								catch (RuntimeException e) {
+								catch (TurnTimeoutException e) {
 									System.out.println("Player took too long to supply input! Forfeiting turn...");
 									isSelectionValid = true;
 								}
@@ -138,7 +139,7 @@ public class TTTDriver {
 									ticTacToe.writeStartTime();
 									isSelectionValid = getPlayerXsTurn(2, sc, ticTacToe);
 								}
-								catch (RuntimeException e) {
+								catch (TurnTimeoutException e) {
 									System.out.println("Player took too long to supply input! Forfeiting turn...");
 									isSelectionValid = true;
 								}
