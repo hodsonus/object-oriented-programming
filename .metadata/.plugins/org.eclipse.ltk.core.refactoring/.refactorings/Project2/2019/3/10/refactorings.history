@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring comment="Rename compilation unit &apos;course.oop.other.exceptions.GameNotStartedException.java&apos; to &apos;GameNotInProgressException.java&apos;&#x0A;- Original project: &apos;Project2&apos;&#x0A;- Original element: &apos;course.oop.other.exceptions.GameNotStartedException.java&apos;&#x0A;- Renamed element: &apos;course.oop.other.exceptions.GameNotInProgressException.java&apos;" description="Rename compilation unit &apos;GameNotStartedException.java&apos;" flags="2" id="org.eclipse.jdt.ui.rename.compilationunit" input="/&lt;course.oop.other.exceptions{GameNotStartedException.java" name="GameNotInProgressException.java" references="false" stamp="1551991804597" version="1.0"/>
-</session>
