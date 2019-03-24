@@ -4,4 +4,10 @@
 		<item value="/Users/johnhodson/GitHub/object-oriented-programming/Project2"/>
 		<item value="/Users/johnhodson/GitHub/object-oriented-programming/Project1"/>
 	</list>
+	<section name="NewWizardAction">
+		<item value="org.eclipse.fx.ide.jdt.ui.javafx" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
+		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
+			<item value="org.eclipse.fx.ide"/>
+		</list>
+	</section>
 </section>

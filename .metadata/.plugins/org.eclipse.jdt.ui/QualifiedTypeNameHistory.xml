@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="course.oop.other.exceptions.InvalidMarkerException"/>
+<fullyQualifiedTypeName name="main.course.oop.tictactoe.util.TwoDArray"/>
+<fullyQualifiedTypeName name="javafx.scene.Group"/>
+<fullyQualifiedTypeName name="main.course.oop.tictactoe.view.MainView"/>
+<fullyQualifiedTypeName name="javafx.scene.effect.MotionBlur"/>
+<fullyQualifiedTypeName name="javafx.scene.transform.Rotate"/>
+</qualifiedTypeNameHistroy>

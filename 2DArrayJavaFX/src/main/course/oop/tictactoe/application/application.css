@@ -1,0 +1,2 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+.root{-fx-background-color: blue;-fx-font-size: 16pt;-fx-font-family: "Verdana";-fx-background: rgb(225, 228, 203);}.orangeButton{-fx-color: orange;}.orangeButton:hover{-fx-color: #CCCCCC;}#twoDArr{-fx-font: bold 20pt "Arial";-fx-text-fill: #000000;}

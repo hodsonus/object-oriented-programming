@@ -88,7 +88,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		else player2 = new Person(username, marker);
 	}
 	
-public void createAI(String username, String marker, int playerNum) {
+	public void createAI(String username, String marker, int playerNum) {
 		
 		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
 		
