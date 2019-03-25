@@ -3,19 +3,10 @@ package course.oop.other;
 import java.util.List;
 import course.oop.other.exceptions.GameNotInProgressException;
 
-import javafx.scene.Node;
-import javafx.scene.control.Separator;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.RowConstraints;
-import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
 
@@ -169,12 +160,15 @@ public class BottomBoard extends Board<Square> {
 		columnConst.setPercentWidth(75.0/3);*/
 		RowConstraints rowConst;/* = new RowConstraints();
 		rowConst.setPercentHeight(75/3);*/
+		int cellSize = 100;
 		
 		for (int i = 0; i < 3; i++) {
 			rowConst = new RowConstraints();
-			rowConst.setPercentHeight(75/3);
+			rowConst.setMinHeight(cellSize);
+			rowConst.setMaxHeight(cellSize);
 			columnConst = new ColumnConstraints();
-			columnConst.setPercentWidth(75.0/3);
+			columnConst.setMinWidth(cellSize);
+			columnConst.setMaxWidth(cellSize);
 			columnConst.setHalignment(HPos.CENTER);
 			guiRep.getColumnConstraints().add(columnConst);
 			guiRep.getRowConstraints().add(rowConst);
@@ -186,7 +180,7 @@ public class BottomBoard extends Board<Square> {
 				guiRep.add(currText,j,i);
 			}
 		}
-
+		
 		guiRep.setGridLinesVisible(true);   
 		
 		return guiRep;

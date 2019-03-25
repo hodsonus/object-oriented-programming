@@ -1,9 +1,8 @@
 package course.oop.other;
-import java.io.Serializable;
 
 import course.oop.other.exceptions.InvalidMarkerException;
 
-public abstract class Player implements Serializable {
+public abstract class Player {
 
     public Player(String username, String marker) {
     	if (marker.length() != 1) throw new InvalidMarkerException();

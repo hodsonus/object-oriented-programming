@@ -1,6 +1,5 @@
 package course.oop.other;
 
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
 public abstract class TicTacToe<E> {

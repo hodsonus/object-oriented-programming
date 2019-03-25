@@ -3,7 +3,6 @@ package course.oop.controller;
 import course.oop.other.*;
 import course.oop.other.exceptions.GameInProgressException;
 import course.oop.other.exceptions.TurnTimeoutException;
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
 public class TTTControllerImpl implements TTTControllerInterface {

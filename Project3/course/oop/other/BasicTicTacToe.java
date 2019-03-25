@@ -1,7 +1,6 @@
 package course.oop.other;
 
 import course.oop.other.exceptions.GameNotInProgressException;
-import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
 public class BasicTicTacToe extends TicTacToe<BottomBoard> {
