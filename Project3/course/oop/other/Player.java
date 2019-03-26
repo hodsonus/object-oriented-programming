@@ -21,7 +21,6 @@ public abstract class Player implements Serializable {
     private int draws;
     private String username;
     private String marker;
-    private boolean isAI;
     
     /* getters and setters */
 
@@ -29,9 +28,7 @@ public abstract class Player implements Serializable {
         return marker;
     }
     
-    public boolean isAI() {
-    	return isAI;
-    }
+    public abstract boolean isAI();
     
     public void incrWins() {
     	wins++;

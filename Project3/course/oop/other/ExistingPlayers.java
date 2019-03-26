@@ -38,7 +38,7 @@ public class ExistingPlayers {
 		    oos.writeObject(players);
 	        oos.close();
 	        fos.close();
-	        System.out.println("Serialized Player data is saved in hashmap.ser");
+	        System.out.println("Serialized Player data is saved in players.ser");
 		}
 		catch (FileNotFoundException fnfe) {
 			fnfe.printStackTrace();
@@ -79,15 +79,15 @@ public class ExistingPlayers {
 		savePlayers();
 	}
 	
-	public ObservableList<String> getRepresentations() {
+	public ObservableList<Player> getRepresentations() {
 		
-		ObservableList<String> oL = FXCollections.observableArrayList();
+		ObservableList<Player> oL = FXCollections.observableArrayList();
 
 		Set set = players.entrySet();
 		Iterator iterator = set.iterator();
 		while(iterator.hasNext()) {
 			Map.Entry mentry = (Map.Entry)iterator.next();
-			oL.add(   ((Player)mentry.getValue()).toString()   );
+			oL.add(   ((Player)mentry.getValue())   );
 		}
 		
 		return oL;

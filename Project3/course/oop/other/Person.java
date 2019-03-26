@@ -13,10 +13,12 @@ public class Person extends Player {
 		super(username, marker);
 	}
 
-	/**
-     * @return
-     */
-    public Pair requestMove() {
+	@Override
+	public boolean isAI() {
+		return false;
+	}
+
+	public Pair requestMove() {
         // TODO implement here
         return null;
     }

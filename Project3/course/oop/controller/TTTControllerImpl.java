@@ -122,6 +122,18 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			exP.savePlayers();
 		}
 	}
+	
+	public void useExistingPlayer(Player a, int playerNum) {
+		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
+		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
+
+		if (playerNum == 1) {
+			player1 = a;
+		}
+		else {
+			player2 = a;
+		}
+	}
 
 	/**
 	 * Allow user to specify location for marker.  
@@ -230,5 +242,11 @@ public class TTTControllerImpl implements TTTControllerInterface {
 
 	public GridPane getGUIDisplay() {
 		return game.getGuiDisplay();
+	}
+
+	public Player getPlayer(int i) {
+		if (!validNumPlayer(i)) throw new IllegalArgumentException();
+		if (i == 1) return player1;
+		return player2;
 	}
 }

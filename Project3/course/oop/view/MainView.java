@@ -5,12 +5,10 @@ import java.io.File;
 import course.oop.controller.InvalidAIOperation;
 import course.oop.controller.InvalidPersonOperation;
 import course.oop.controller.TTTControllerImpl;
-import course.oop.other.Person;
 import course.oop.other.Player;
 import course.oop.other.ExistingPlayers;
 import course.oop.other.exceptions.InvalidMarkerException;
 import course.oop.other.exceptions.TurnTimeoutException;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -20,8 +18,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.control.CheckBox;
@@ -69,16 +69,14 @@ public class MainView {
 	private GridPane buildIntro() {
 		Text title = new Text("BASIC TIC-TAC-TOE");
 		GridPane topBar = new GridPane();
-		//TODO, make a pretty header
 		title.setStyle(
 					  "-fx-font-size: 50px;"
-//				    + "-fx-font-color: #CD6155;"
-//					+ "-fx-font-family: Notoadasdfasdss;"
-//					+ "-fx-text-shadow: -1px -1px 0 #000, 1px -1px 0 #000,-1px 1px 0 #000, 1px 1px 0 #000;"
+				    + "-fx-font-color: #CD6155;"
+				    + "-fx-font-family: Impact;"
 					+ "-fx-font-weight: bold;");
 //					+ "-fx-font-variant: small-caps;");
-		
-		topBar.add(title, 0, 0);
+        
+		topBar.add(title, 1, 0);
 		topBar.setAlignment(Pos.CENTER);
 		topBar.setPadding(new Insets(10, 10, 10, 10)); 
 	
@@ -88,7 +86,7 @@ public class MainView {
 	private GridPane buildSetupPane() {
         Button startButton = new Button("Start!");
         
-        //handler for start button, moves us to the input of user attribures
+        //handler for start button, moves us to the input of user attributes
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
            @Override 
            public void handle(MouseEvent e) { 
@@ -156,7 +154,7 @@ public class MainView {
 			p1DoesntExist.add(player1MarkerField,   0, 7);
 		//GridPane to show if player1 is going to be an existing player
 		GridPane p1Exists = new GridPane();
-			ListView<String> existingOptionsP1 = new ListView<String>();
+			ListView<Player> existingOptionsP1 = new ListView<Player>();
 			populateListView(existingOptionsP1);
 			p1Exists.add(existingOptionsP1, 0, 0);
 		//by default, have users input new player
@@ -180,7 +178,7 @@ public class MainView {
 			p2DoesntExist.add(player2MarkerField,   2, 7);
 		//similar to above, instantiate GridPane to show to users when they want to retrieve an existing player
 		GridPane p2Exists = new GridPane();
-			ListView<String> existingOptionsP2 = new ListView<String>();
+			ListView<Player> existingOptionsP2 = new ListView<Player>();
 			populateListView(existingOptionsP2);
 			p2Exists.add(existingOptionsP2, 0, 0);
 		p2Exists.setVisible(false);
@@ -221,42 +219,51 @@ public class MainView {
          doesPlayer2ExistCheckbox.addEventFilter(MouseEvent.MOUSE_CLICKED, p2ExistsHandler);
 
 		//handler for the submission box
-         //TODO, extract logic into two distinct parts, retrieval of existing objects and instantiation of old objects
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
            @Override 
            public void handle(MouseEvent e) { 
-        	   
         	   // isInvalid if the name field is empty or the marker field is empty AND we are creating a new player
         	   // isInvalid if we are choosing an existing character and no player is selected
-        	   boolean player1SelectionIsInvalid = (("".equals(player1NameTextField.getText()) || "".equals(player1MarkerField.getText())) && !doesPlayer1ExistCheckbox.isSelected()) || (doesPlayer1ExistCheckbox.isSelected() && existingOptionsP2.getSelectionModel().getSelectedItem() == null);
-        	   boolean player2SelectionIsInvalid = (  ("".equals(player2NameTextField.getText()) || "".equals(player2MarkerField.getText())) && !doesPlayer2ExistCheckbox.isSelected() || (doesPlayer2ExistCheckbox.isSelected() && existingOptionsP2.getSelectionModel().getSelectedItem() == null));
+        	   boolean player1SelectionIsInvalid = (("".equals(player1NameTextField.getText()) || "".equals(player1MarkerField.getText())) && !doesPlayer1ExistCheckbox.isSelected()) || (doesPlayer1ExistCheckbox.isSelected() && existingOptionsP1.getSelectionModel().getSelectedItem() == null);
+        	   boolean player2SelectionIsInvalid = (("".equals(player2NameTextField.getText()) || "".equals(player2MarkerField.getText())) && !doesPlayer2ExistCheckbox.isSelected()) || (doesPlayer2ExistCheckbox.isSelected() && existingOptionsP2.getSelectionModel().getSelectedItem() == null);
         	   
         	   if ( player1SelectionIsInvalid || player2SelectionIsInvalid) {
         		   buildPlayerObjects(new Text("Invalid Input, please specify text to all fields."));
         		   return;
         	   }
-        	   
         	   try {
-        		   System.out.println("craeting objects...");
-	        	   if (isPlayer1AICheckbox.isSelected()) {
-						ticTacToe.createAI(player1NameTextField.getText(), player1MarkerField.getText(), 1);
-	        	   } else {
-						ticTacToe.createPlayer(player1NameTextField.getText(), player1MarkerField.getText(), 1);
-	        	   }
+        		   if (!doesPlayer1ExistCheckbox.isSelected()) {
+                	   player1Username = player1NameTextField.getText();
+        			   if (isPlayer1AICheckbox.isSelected()) {
+        				   ticTacToe.createAI(player1NameTextField.getText(), player1MarkerField.getText(), 1);
+	   	        	   }
+	   	        	   else {
+	   						ticTacToe.createPlayer(player1NameTextField.getText(), player1MarkerField.getText(), 1);
+	   	        	   }   
+        		   }
+        		   else {
+        			   player1Username = existingOptionsP1.getSelectionModel().getSelectedItem().getUsername();
+        			   ticTacToe.useExistingPlayer(existingOptionsP1.getSelectionModel().getSelectedItem(), 1);
+        		   }
 	        	   
-	        	   if (isPlayer2AICheckbox.isSelected()) {
-						ticTacToe.createAI(player2NameTextField.getText(), player2MarkerField.getText(), 2);
-		       	   } else {
-						ticTacToe.createPlayer(player2NameTextField.getText(), player2MarkerField.getText(), 2);
-		       	   }
+        		   if (!doesPlayer2ExistCheckbox.isSelected()) {
+        			   player2Username = player2NameTextField.getText();
+        			   if (isPlayer2AICheckbox.isSelected()) {
+   						ticTacToe.createAI(player2NameTextField.getText(), player2MarkerField.getText(), 2);
+	   		       	   }
+	   	        	   else {
+	   						ticTacToe.createPlayer(player2NameTextField.getText(), player2MarkerField.getText(), 2);
+	   		       	   }
+        		   }
+        		   else {
+        			   player2Username = existingOptionsP2.getSelectionModel().getSelectedItem().getUsername();
+        			   ticTacToe.useExistingPlayer(existingOptionsP2.getSelectionModel().getSelectedItem(), 2);
+        		   }
         	   }
         	   catch (InvalidMarkerException ime) {
         		   buildPlayerObjects(new Text("Invalid marker supplied, please input a valid marker."));
         		   return;
         	   }
-        	   
-        	   player1Username = player1NameTextField.getText();
-        	   player2Username = player2NameTextField.getText();
         	   
                startNewGame(new Text("Please input as to whether you want a timer or not."));
            } 
@@ -266,8 +273,8 @@ public class MainView {
 		root.setCenter(formatGridPane(playerScreen, Pos.CENTER));
 	}
 	
-	private void populateListView(ListView<String> existingOptions) {
-		ObservableList<String> players = exP.getRepresentations();
+	private void populateListView(ListView<Player> existingOptions) {
+		ObservableList<Player> players = exP.getRepresentations();
 		existingOptions.setItems(players);
 	}
 
@@ -379,6 +386,7 @@ public class MainView {
         
         //label for viewing the current players turn
         //TODO, make it prettier
+        
         GridPane playerXTurn = new GridPane();
         playerXTurn.setAlignment(Pos.CENTER_RIGHT);
         playerXTurn.setPadding(new Insets(10, 10, 10, 10));
@@ -387,19 +395,26 @@ public class MainView {
         
         //setup the controlButtons node (GridPane that just contains the two buttons and their labels)
   		GridPane controlButtons = new GridPane();
-  		controlButtons.add(new Text(""), 0, 1);
-  		controlButtons.add(quitButton, 1, 1);
-  		controlButtons.add(new Text(""),  2, 1);
-  		controlButtons.add(resetButton,  3, 1);
-  		controlButtons.setVgap(20);
-  		controlButtons.setHgap(1);
-  		controlButtons.setAlignment(Pos.CENTER_LEFT);
-  		controlButtons.setPadding(new Insets(10, 10, 10, 10));
+	  		controlButtons.add(new Text(""), 0, 1);
+	  		controlButtons.add(quitButton, 1, 1);
+	  		controlButtons.add(new Text(""),  2, 1);
+	  		controlButtons.add(resetButton,  3, 1);
+	  		controlButtons.setVgap(20);
+	  		controlButtons.setHgap(1);
+	  		controlButtons.setAlignment(Pos.CENTER_LEFT);
+	  		controlButtons.setPadding(new Insets(10, 10, 10, 10));
   		  		
   		//the topBar consists of the current player's turn label and the controlbuttons
   		GridPane topBar = new GridPane();
   		topBar.add(controlButtons, 0,0);
   		topBar.add(playerXTurn,    1,0);
+  		
+        ColumnConstraints column1 = new ColumnConstraints();
+        ColumnConstraints column2 = new ColumnConstraints();
+        column1.setPercentWidth(33);
+        column2.setPercentWidth(33);
+        topBar.getColumnConstraints().add(column1);
+        topBar.getColumnConstraints().add(column2);
   		
   		//set the top
   		root.setTop(topBar);
@@ -420,27 +435,63 @@ public class MainView {
 	}
 	
 	//this method is responsible for taking in user input and updating the board object
-	private void setupUserMoveInputScreen() {		
+	private void setupUserMoveInputScreen() {
 		//instantiate out primary grid
-		GridPane userInputScreen = new GridPane();
+		GridPane entireScreen = new GridPane();
+		entireScreen.setVgap(5);
+		entireScreen.setHgap(8);
+		entireScreen.setPadding(new Insets(10, 10, 10, 10));
 		
 		//setup user input fields
-		Text rowInputLabel = new Text("Desired Row:");
-		TextField rowInputField = new TextField();
-		Text colInputLabel = new Text("Desired Col:");
-		TextField colInputField = new TextField();
-		Button submitUserInputButton = new Button("Submit User Move");
+		GridPane userInput = new GridPane();
+			userInput.setHgap(5);
+			userInput.setVgap(5);
+			userInput.setPadding(new Insets(10, 10, 10, 10));
+			Text rowInputLabel = new Text("Desired Row:");
+			TextField rowInputField = new TextField();
+			Text colInputLabel = new Text("Desired Col:");
+			TextField colInputField = new TextField();
+			Button submitUserInputButton = new Button("Submit User Move");
+
+			userInput.add(rowInputLabel,            0, 0);
+			userInput.add(rowInputField,            1, 0);
+			userInput.add(colInputLabel,            0, 1);
+			userInput.add(colInputField,            1, 1);
+			userInput.add(submitUserInputButton,    1, 2);
+			
+		//setup AI input fields
+		GridPane AIInput = new GridPane();
+			AIInput.setHgap(5);
+			AIInput.setVgap(5);
+			AIInput.setPadding(new Insets(10, 10, 10, 10));
+			Button requestAIButton = new Button("Request AI Move");
+			AIInput.add(requestAIButton, 0, 0);
+					
+		entireScreen.add(userInput, 0, 0);
+		entireScreen.add(AIInput,   0, 0);
 		
-		userInputScreen.setVgap(5);
-		userInputScreen.setHgap(8);
+		//logic to hide/show the appropriate user display, dependent on state
+		if (player1Turn) {
+			if (ticTacToe.getPlayer(1).isAI()) {
+				userInput.setVisible(false);
+				AIInput.setVisible(true);
+			}
+			else {
+				userInput.setVisible(true);
+				AIInput.setVisible(false);
+			}
+		}
+		else {
+			if (ticTacToe.getPlayer(2).isAI()) {
+				userInput.setVisible(false);
+				AIInput.setVisible(true);
+			}
+			else {
+				userInput.setVisible(true);
+				AIInput.setVisible(false);
+			}
+		}
 		
-		userInputScreen.add(rowInputLabel,         0, 2);
-		userInputScreen.add(rowInputField,         1, 2);
-		userInputScreen.add(colInputLabel,         0, 3);
-		userInputScreen.add(colInputField,         1, 3);
-		userInputScreen.add(submitUserInputButton, 0, 4);
-		
-		//TODO, refactor into clicking on the individual squares?
 		//event handler for the submission of the user input
         EventHandler<MouseEvent> submitEventHandler = new EventHandler<MouseEvent>() { 
         	@Override 
@@ -453,7 +504,10 @@ public class MainView {
         			col = Integer.parseInt(colInputField.getText());
         		}
         		catch (NumberFormatException nfe) {
-        			//TODO print a message about invalid input to the locator selector
+//        			GridPane y = ((GridPane)root.getTop());
+//        			updateView();
+//        			y.add(new Text("Not a valid integer to index with."), 0, 1);
+//        			y.setPadding(new Insets(10, 10, 10, 10));
         			return;
         		}
         		//if the numbers were valid, make a call to the board and print to our logging terminal
@@ -492,9 +546,6 @@ public class MainView {
         };
         submitUserInputButton.addEventFilter(MouseEvent.MOUSE_CLICKED, submitEventHandler);
         
-        //handler for submitting an AI move to the board
-		Button requestAIButton = new Button("Request AI Move");
-		userInputScreen.add(requestAIButton, 0, 0);
         EventHandler<MouseEvent> requestAIHandler = new EventHandler<MouseEvent>() { 
         	@Override 
         	public void handle(MouseEvent e) { 
@@ -532,9 +583,8 @@ public class MainView {
         };  
         requestAIButton.addEventFilter(MouseEvent.MOUSE_CLICKED, requestAIHandler);
                 
-        //set some padding and then put it on the bottom
-        userInputScreen.setPadding(new Insets(10, 10, 10, 10));
-		root.setBottom(userInputScreen);
+        //put it on the bottom
+		root.setBottom(entireScreen);
 		
 		//write the start time for the next move
         ticTacToe.writeStartTime();
@@ -572,8 +622,10 @@ public class MainView {
         		System.out.println("Playing game again with same players.");
          	   	player1Turn = true;
         		ticTacToe.resetGame();
+        		root.setBottom(new Text(""));
          	   	updateView();
          	   	addTopButtons();
+           	 	exP.savePlayers();
          	   	ticTacToe.writeStartTime();
          	   	System.out.println("Game has been reset.");
            } 
@@ -583,6 +635,8 @@ public class MainView {
         	@Override 
         	public void handle(MouseEvent e) { 
         		System.out.println("User indicated to choose players again.");
+        		root.setBottom(new Text(""));
+           	 	exP.savePlayers();
         		buildPlayerObjects(new Text("Please input player attributes."));
            } 
         };  
@@ -625,6 +679,7 @@ public class MainView {
 			addTopButtons();
 			GridPane y = ((GridPane)root.getTop());
 			y.add(new Text("Please supply an AI's move, current player is not an AI."), 0, 1);
+			y.setPadding(new Insets(10, 10, 10, 10));
 			return;
 		}
 		//handle timeouts and print errors
@@ -633,21 +688,24 @@ public class MainView {
 			addTopButtons();
 			GridPane y = ((GridPane)root.getTop());
 			y.add(new Text("User took too long to provide input. Forfeiting turn..."), 0, 1);
+			y.setPadding(new Insets(10, 10, 10, 10));
 			return;
 		}
+		//switch turns and then clear the messages
+				player1Turn = !player1Turn;
+				addTopButtons();
 		//if it was valid, indicate so
 		if (valid) {
 			GridPane y = ((GridPane)root.getTop());
 			y.add(new Text("Successful placement!"), 0, 1);
+			y.setPadding(new Insets(10, 10, 10, 10));
 		}
 		//if it was invalid, indicate so
 		else {
 			GridPane y = ((GridPane)root.getTop());
 			y.add(new Text("Failure to place move on grid."), 0, 1);
+			y.setPadding(new Insets(10, 10, 10, 10));
 		}
-		//switch turns and then clear the messages
-		player1Turn = !player1Turn;
-		addTopButtons();
 	}
 	
 	private void requestAIMove() {
@@ -665,6 +723,7 @@ public class MainView {
 			addTopButtons();
 			GridPane y = ((GridPane)root.getTop());
 			y.add(new Text("Please supply a user's move, current player is not an AI."), 0, 1);
+			y.setPadding(new Insets(10, 10, 10, 10));
 			return;
 		}
 		//catch timeouts and skip their turn
@@ -673,6 +732,7 @@ public class MainView {
 			addTopButtons();
 			GridPane y = ((GridPane)root.getTop());
 			y.add(new Text("User took too long to provide input. Forfeiting turn..."), 0, 1);
+			y.setPadding(new Insets(10, 10, 10, 10));
 			return;
 		}
 		
