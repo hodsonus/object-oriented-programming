@@ -2,6 +2,12 @@ To compile and run this code, please create a new Eclipse project from an existi
 
 The project can then be launched through eclipse with the Main.java class found in course.oop.application.
 
+All features from the previous iteration have been implemented, and the user interface has been designed such that it is very intuitive and easy to use.
+
+Any player that is input to the program will be available for future use. I accomplished this through serialization. This serialization was implemented with a wrapper class that contained a map of Player objects. This Map is serialized and stored in the root as players.ser. Delete this file if you would like to start with a fresh set of Players.
+
+There is a noise that is played upon victory, but no animation. The project requirements only asked for one.
+
 Some notes about the runtime behavior and the behavior of the classes that are implemented:
 	Custom runtime exceptions have been implemented. These are as follows and will be thrown if input to the object is provided when the object is not in a valid state:
 		InvalidAIOperation
@@ -16,5 +22,3 @@ Some notes about the runtime behavior and the behavior of the classes that are i
 			occurs when an invalid player marker is provided for a player object. often occurs when the marker is more than 1 character long
 		TurnTimeoutException
 			is thrown when a user takes too long to supply input to the program when it is their turn
-	All features from the previous iteration have been implemented, and the user interface has been designed such that it is very intuitive and easy to use.
-	Any player that is input to the program will be available for future use. I accomplished this through serialization. This serialization was implemented with a wrapper class that contained a map of Player objects. This Map is serialized and stored in the root as players.ser. Delete this file if you would like to start with a fresh set of Players.
