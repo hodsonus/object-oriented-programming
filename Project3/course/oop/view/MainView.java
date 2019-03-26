@@ -35,8 +35,8 @@ public class MainView {
     private final int windowHeight = 700;
     
     //basic control attributes (mirrors TTTDriver from Project2)
-    private String player1Username;
-    private String player2Username;
+    private Player player1;
+    private Player player2;
     private boolean player1Turn;
     private TTTControllerImpl ticTacToe;
     private ExistingPlayers exP;
@@ -233,31 +233,27 @@ public class MainView {
         	   }
         	   try {
         		   if (!doesPlayer1ExistCheckbox.isSelected()) {
-                	   player1Username = player1NameTextField.getText();
         			   if (isPlayer1AICheckbox.isSelected()) {
-        				   ticTacToe.createAI(player1NameTextField.getText(), player1MarkerField.getText(), 1);
+        				   player1 = ticTacToe.createAI(player1NameTextField.getText(), player1MarkerField.getText(), 1);
 	   	        	   }
 	   	        	   else {
-	   						ticTacToe.createPlayer(player1NameTextField.getText(), player1MarkerField.getText(), 1);
+	   	        		   player1 = ticTacToe.createPlayer(player1NameTextField.getText(), player1MarkerField.getText(), 1);
 	   	        	   }   
         		   }
         		   else {
-        			   player1Username = existingOptionsP1.getSelectionModel().getSelectedItem().getUsername();
-        			   ticTacToe.useExistingPlayer(existingOptionsP1.getSelectionModel().getSelectedItem(), 1);
+        			   player1 = ticTacToe.useExistingPlayer(existingOptionsP1.getSelectionModel().getSelectedItem(), 1);
         		   }
 	        	   
         		   if (!doesPlayer2ExistCheckbox.isSelected()) {
-        			   player2Username = player2NameTextField.getText();
         			   if (isPlayer2AICheckbox.isSelected()) {
-   						ticTacToe.createAI(player2NameTextField.getText(), player2MarkerField.getText(), 2);
+        				   player2 = ticTacToe.createAI(player2NameTextField.getText(), player2MarkerField.getText(), 2);
 	   		       	   }
 	   	        	   else {
-	   						ticTacToe.createPlayer(player2NameTextField.getText(), player2MarkerField.getText(), 2);
+	   	        		player2 = ticTacToe.createPlayer(player2NameTextField.getText(), player2MarkerField.getText(), 2);
 	   		       	   }
         		   }
         		   else {
-        			   player2Username = existingOptionsP2.getSelectionModel().getSelectedItem().getUsername();
-        			   ticTacToe.useExistingPlayer(existingOptionsP2.getSelectionModel().getSelectedItem(), 2);
+        			   player2 = ticTacToe.useExistingPlayer(existingOptionsP2.getSelectionModel().getSelectedItem(), 2);
         		   }
         	   }
         	   catch (InvalidMarkerException ime) {
@@ -292,7 +288,7 @@ public class MainView {
 		GridPane timerScreen = new GridPane();
 		
 		//timer label and field
-		Text timerLengthLabel = new Text("Timer length:");
+		Text timerLengthLabel = new Text("Timer length (seconds):");
 		TextField timerLengthField = new TextField();
 		Button submitButton = new Button("Submit");
 		
@@ -383,14 +379,7 @@ public class MainView {
              }
           };  
         quitButton.addEventFilter(MouseEvent.MOUSE_CLICKED, quitEventHandler);
-        
-        //label for viewing the current players turn        
-        GridPane playerXTurn = new GridPane();
-        playerXTurn.setAlignment(Pos.CENTER_RIGHT);
-        playerXTurn.setPadding(new Insets(10, 10, 10, 10));
-        String currentPlayer = player1Turn ? player1Username : player2Username;
-        playerXTurn.add(new Text(currentPlayer + "'s turn"), 0, 0);    
-        
+                
         //setup the controlButtons node (GridPane that just contains the two buttons and their labels)
   		GridPane controlButtons = new GridPane();
 	  		controlButtons.add(new Text(""), 0, 1);
@@ -405,14 +394,6 @@ public class MainView {
   		//the topBar consists of the current player's turn label and the controlbuttons
   		GridPane topBar = new GridPane();
   		topBar.add(controlButtons, 0,0);
-  		topBar.add(playerXTurn,    1,0);
-  		
-        ColumnConstraints column1 = new ColumnConstraints();
-        ColumnConstraints column2 = new ColumnConstraints();
-        column1.setPercentWidth(33);
-        column2.setPercentWidth(33);
-        topBar.getColumnConstraints().add(column1);
-        topBar.getColumnConstraints().add(column2);
   		
   		//set the top
   		root.setTop(topBar);
@@ -440,6 +421,13 @@ public class MainView {
 		entireScreen.setHgap(8);
 		entireScreen.setPadding(new Insets(10, 10, 10, 10));
 		
+        //label for viewing the current players turn        
+        GridPane playerXTurn = new GridPane();
+	        playerXTurn.setAlignment(Pos.CENTER_LEFT);
+	        playerXTurn.setPadding(new Insets(10, 10, 10, 10));
+	        String currentPlayer = player1Turn ? player1.getUsername() : player2.getUsername();
+	        playerXTurn.add(new Text(currentPlayer + "'s turn"), 0, 0);    
+		
 		//setup user input fields
 		GridPane userInput = new GridPane();
 			userInput.setHgap(5);
@@ -465,8 +453,9 @@ public class MainView {
 			Button requestAIButton = new Button("Request AI Move");
 			AIInput.add(requestAIButton, 0, 0);
 					
-		entireScreen.add(userInput, 0, 0);
-		entireScreen.add(AIInput,   0, 0);
+		entireScreen.add(playerXTurn, 0, 0);
+		entireScreen.add(userInput,   0, 1);
+		entireScreen.add(AIInput,     0, 1);
 		
 		//logic to hide/show the appropriate user display, dependent on state
 		if (player1Turn) {
@@ -516,19 +505,19 @@ public class MainView {
         		int winner = ticTacToe.determineWinner();
         		String resultString;
         		if (winner == 1) {
-        			resultString = player1Username + " won the game!!";
+        			resultString = player1.getUsername() + " won the game!!";
         			System.out.println(resultString);
         			endGame(new Text(resultString));
         			return;
         		}
         		else if (winner == 2) {
-        			resultString = player2Username + " won the game!!";
+        			resultString = player2.getUsername() + " won the game!!";
         			System.out.println(resultString);
         			endGame(new Text(resultString));
         			return;
         		} 
         		else if (winner == 3) {
-        			resultString = player1Username + " and " + player2Username + "'s game resulted in a draw!!";
+        			resultString = player1.getUsername() + " and " + player2.getUsername() + "'s game resulted in a draw!!";
         			System.out.println(resultString);
         			endGame(new Text(resultString));
         			return;
@@ -552,19 +541,19 @@ public class MainView {
         		int winner = ticTacToe.determineWinner();
         		String resultString;
         		if (winner == 1) {
-        			resultString = player1Username + " won the game!!";
+        			resultString = player1.getUsername() + " won the game!!";
         			System.out.println(resultString);
         			endGame(new Text(resultString));
         			return;
         		}
         		else if (winner == 2) {
-        			resultString = player2Username + " won the game!!";
+        			resultString = player2.getUsername() + " won the game!!";
         			System.out.println(resultString);
         			endGame(new Text(resultString));
         			return;
         		} 
         		else if (winner == 3) {
-        			resultString = player1Username + " and " + player2Username + "'s game resulted in a draw!!";
+        			resultString = player1.getUsername() + " and " + player2.getUsername() + "'s game resulted in a draw!!";
         			System.out.println(resultString);
         			endGame(new Text(resultString));
         			return;
@@ -589,6 +578,23 @@ public class MainView {
 	}
 	
 	private void endGame(Text topLabel) {
+		
+
+		int winner = ticTacToe.determineWinner();
+		
+		if (winner == 1) {
+			player1.incrWins();
+			player2.incrLosses();
+		}
+		else if (winner == 2) {
+			player2.incrWins();
+			player1.incrLosses();
+		}
+		else if (winner == 3) {
+			player1.incrDraws();
+			player2.incrDraws();
+		}
+
    	 	exP.savePlayers();
 		
 		//put the topLabel on root's top with the appropriate end game message
@@ -676,8 +682,13 @@ public class MainView {
 		catch (InvalidAIOperation iaio) {
 			addTopButtons();
 			GridPane y = ((GridPane)root.getTop());
-			y.add(new Text("Please supply an AI's move, current player is not an AI."), 0, 1);
-			y.setPadding(new Insets(10, 10, 10, 10));
+			
+			Text errorMessage = new Text("Please supply an AI's move, current player is not a person.");			
+			GridPane errorMessageWrapper = new GridPane();
+			errorMessageWrapper.add(errorMessage, 0, 0);
+			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
+			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
+			y.add(errorMessageWrapper, 0, 1);
 			return;
 		}
 		//handle timeouts and print errors
@@ -685,24 +696,36 @@ public class MainView {
 			player1Turn = !player1Turn;
 			addTopButtons();
 			GridPane y = ((GridPane)root.getTop());
-			y.add(new Text("User took too long to provide input. Forfeiting turn..."), 0, 1);
-			y.setPadding(new Insets(10, 10, 10, 10));
+			Text errorMessage = new Text("User took too long to supply input, forfeiting turn...");			
+			GridPane errorMessageWrapper = new GridPane();
+			errorMessageWrapper.add(errorMessage, 0, 0);
+			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
+			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
+			y.add(errorMessageWrapper, 0, 1);
 			return;
 		}
 		//switch turns and then clear the messages
-				player1Turn = !player1Turn;
-				addTopButtons();
+		player1Turn = !player1Turn;
+		addTopButtons();
 		//if it was valid, indicate so
 		if (valid) {
 			GridPane y = ((GridPane)root.getTop());
-			y.add(new Text("Successful placement!"), 0, 1);
-			y.setPadding(new Insets(10, 10, 10, 10));
+			Text errorMessage = new Text("Successful placement!");			
+			GridPane errorMessageWrapper = new GridPane();
+			errorMessageWrapper.add(errorMessage, 0, 0);
+			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
+			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
+			y.add(errorMessageWrapper, 0, 1);
 		}
 		//if it was invalid, indicate so
 		else {
 			GridPane y = ((GridPane)root.getTop());
-			y.add(new Text("Failure to place move on grid."), 0, 1);
-			y.setPadding(new Insets(10, 10, 10, 10));
+			Text errorMessage = new Text("Move was not valid, forfeiting turn...");			
+			GridPane errorMessageWrapper = new GridPane();
+			errorMessageWrapper.add(errorMessage, 0, 0);
+			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
+			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
+			y.add(errorMessageWrapper, 0, 1);
 		}
 	}
 	
@@ -720,8 +743,12 @@ public class MainView {
 		catch (InvalidPersonOperation ipo) {
 			addTopButtons();
 			GridPane y = ((GridPane)root.getTop());
-			y.add(new Text("Please supply a user's move, current player is not an AI."), 0, 1);
-			y.setPadding(new Insets(10, 10, 10, 10));
+			Text errorMessage = new Text("Please supply a person's move, current player is not an AI.");		
+			GridPane errorMessageWrapper = new GridPane();
+			errorMessageWrapper.add(errorMessage, 0, 0);
+			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
+			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
+			y.add(errorMessageWrapper, 0, 1);
 			return;
 		}
 		//catch timeouts and skip their turn
@@ -729,8 +756,12 @@ public class MainView {
 			player1Turn = !player1Turn;
 			addTopButtons();
 			GridPane y = ((GridPane)root.getTop());
-			y.add(new Text("User took too long to provide input. Forfeiting turn..."), 0, 1);
-			y.setPadding(new Insets(10, 10, 10, 10));
+			Text errorMessage = new Text("User took too long to supply input, forfeiting turn...");			
+			GridPane errorMessageWrapper = new GridPane();
+			errorMessageWrapper.add(errorMessage, 0, 0);
+			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
+			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
+			y.add(errorMessageWrapper, 0, 1);
 			return;
 		}
 		
@@ -740,6 +771,11 @@ public class MainView {
 		//print message to topPane (AI moves are always successful if there are available spaces)
 		addTopButtons();
 		GridPane y = ((GridPane)root.getTop());
-		y.add(new Text("Successful placement!"), 0, 1);
+		Text errorMessage = new Text("Successful placement!");			
+		GridPane errorMessageWrapper = new GridPane();
+		errorMessageWrapper.add(errorMessage, 0, 0);
+		errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
+		errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
+		y.add(errorMessageWrapper, 0, 1);
 	}
 }

@@ -10,6 +10,8 @@
 
 package course.oop.controller;
 
+import course.oop.other.Player;
+
 public interface TTTControllerInterface {
 	
 	/**
@@ -30,8 +32,9 @@ public interface TTTControllerInterface {
 	 * @param username
 	 * @param marker
 	 * @param playerNum
+	 * @return 
 	 */
-	void createPlayer(String username, String marker, int playerNum);
+	Player createPlayer(String username, String marker, int playerNum);
 	
 	/**
 	 * Allow user to specify location for marker.  

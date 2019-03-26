@@ -76,7 +76,6 @@ public class ExistingPlayers {
 	
 	public void add(Player player) {
 		players.put(player.getUsername(),player);
-		savePlayers();
 	}
 	
 	public ObservableList<Player> getRepresentations() {

@@ -76,7 +76,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * @param playerNum
 	 */
 	@Override
-	public void createPlayer(String username, String marker, int playerNum) {
+	public Player createPlayer(String username, String marker, int playerNum) {
 		
 		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
@@ -85,15 +85,17 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			player1 = new Person(username, marker);
 			exP.add(player1);
 			exP.savePlayers();
+			return player1;
 		}
 		else  {
 			player2 = new Person(username, marker);
 			exP.add(player2);
 			exP.savePlayers();
+			return player2;
 		}
 	}
 	
-	public void createAI(String username, String marker, int playerNum) {
+	public Player createAI(String username, String marker, int playerNum) {
 		
 		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
@@ -102,15 +104,17 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			player1 = new AI(username, marker);
 			exP.add(player1);
 			exP.savePlayers();
+			return player1;
 		}
 		else {
 			player2 = new AI(username, marker);
 			exP.add(player2);
 			exP.savePlayers();
+			return player2;
 		}
 	}
 	
-	public void useExistingPlayer(Player a, int playerNum) {
+	public Player useExistingPlayer(Player a, int playerNum) {
 		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
 
@@ -120,6 +124,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		else {
 			player2 = a;
 		}
+		return a;
 	}
 
 	/**
@@ -182,27 +187,8 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	public int determineWinner() {
 		if (!game.isOver()) return 0;
 		if (game.isOver()) {
-			if (game.isVictorious(player1)) {
-				if (!updatedPlayerState) {
-					player2.incrLosses();
-					player1.incrWins();
-					updatedPlayerState = true;
-				}
-				return 1;
-			}
-			if (game.isVictorious(player2)) {
-				if (!updatedPlayerState) {
-					player1.incrLosses();
-					player2.incrWins();
-					updatedPlayerState = true;
-				}
-				return 2;
-			}
-		}
-		if (!updatedPlayerState) {
-			player1.incrDraws();
-			player2.incrDraws();
-			updatedPlayerState = true;
+			if (game.isVictorious(player1)) return 1;
+			if (game.isVictorious(player2)) return 2;
 		}
 		return 3;
 	}
