@@ -1,15 +1,13 @@
 package course.oop.other;
 
+import java.io.Serializable;
+
 /**
  * 
  */
 public class Person extends Player {
 
-//    /**
-//     * Default constructor
-//     */
-//    public Person() {
-//    }
+//	private static final long serialVersionUID = 196L;
 
 	public Person(String username, String marker) {
 		super(username, marker);

@@ -12,6 +12,8 @@ public class Main extends Application {
 			MainView mView = new MainView();
 			Scene scene = mView.getMainScene();
 
+			
+			//TODO
 //			Font.loadFont(getClass().getResourceAsStream("NotoColorEmoji.ttf"), 16);
 //			Font.loadFont(getClass().getResourceAsStream("OpenSansEmoji.ttf"), 16);
 			

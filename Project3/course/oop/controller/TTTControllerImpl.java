@@ -12,12 +12,16 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	private TicTacToe game;
 	private int numPlayers, timeoutInSecs;
 	private long startTime;
+    private ExistingPlayers exP;
+    private boolean updatedPlayerState;
 	
 	public TTTControllerImpl() {
 		this.player1 = null;
 		this.player2 = null;
 		this.numPlayers = -1;
 		this.game = null;
+		this.exP = ExistingPlayers.getInstance();
+		updatedPlayerState = false;
 	}
 
 	/**
@@ -55,10 +59,16 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	
 	public void quitGame() {
 		game.quitGame();
+		player1.incrDraws();
+		player2.incrDraws();
+		this.updatedPlayerState = false;
 	}
 	
 	public void resetGame() {
 		game.resetGame();
+		player1.incrDraws();
+		player2.incrDraws();
+		this.updatedPlayerState = false;
 	}
 	
 	private void fillEmptyPlayers() {
@@ -82,21 +92,35 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	public void createPlayer(String username, String marker, int playerNum) {
 		
 		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
-		
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
 		
-		if (playerNum == 1) player1 = new Person(username, marker);
-		else player2 = new Person(username, marker);
+		if (playerNum == 1)  {
+			player1 = new Person(username, marker);
+			exP.add(player1);
+			exP.savePlayers();
+		}
+		else  {
+			player2 = new Person(username, marker);
+			exP.add(player2);
+			exP.savePlayers();
+		}
 	}
 	
 	public void createAI(String username, String marker, int playerNum) {
 		
 		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
-		
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
 		
-		if (playerNum == 1) player1 = new AI(username, marker);
-		else player2 = new AI(username, marker);
+		if (playerNum == 1) {
+			player1 = new AI(username, marker);
+			exP.add(player1);
+			exP.savePlayers();
+		}
+		else {
+			player2 = new AI(username, marker);
+			exP.add(player2);
+			exP.savePlayers();
+		}
 	}
 
 	/**
@@ -159,8 +183,27 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	public int determineWinner() {
 		if (!game.isOver()) return 0;
 		if (game.isOver()) {
-			if (game.isVictorious(player1)) return 1;
-			if (game.isVictorious(player2)) return 2;
+			if (game.isVictorious(player1)) {
+				if (!updatedPlayerState) {
+					player2.incrLosses();
+					player1.incrWins();
+					updatedPlayerState = true;
+				}
+				return 1;
+			}
+			if (game.isVictorious(player2)) {
+				if (!updatedPlayerState) {
+					player1.incrLosses();
+					player2.incrWins();
+					updatedPlayerState = true;
+				}
+				return 2;
+			}
+		}
+		if (!updatedPlayerState) {
+			player1.incrDraws();
+			player2.incrDraws();
+			updatedPlayerState = true;
 		}
 		return 3;
 	}

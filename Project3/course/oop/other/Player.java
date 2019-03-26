@@ -1,13 +1,19 @@
 package course.oop.other;
 
+import java.io.Serializable;
+
 import course.oop.other.exceptions.InvalidMarkerException;
 
-public abstract class Player {
+public abstract class Player implements Serializable {
 
-    public Player(String username, String marker) {
-    	if (marker.length() != 1) throw new InvalidMarkerException();
-//    	if (playerRecordExists(username)) restorePlayer(username, marker);
-    	else createNewPlayer(username, marker);
+	private static final long serialVersionUID = 196L;
+
+	public Player(String username, String marker) {
+    	this.wins = 0;
+    	this.losses = 0;
+    	this.draws = 0;
+    	this.username = username;
+    	setMarker(marker);
     }
 
 	private int wins;
@@ -29,26 +35,23 @@ public abstract class Player {
     
     public void incrWins() {
     	wins++;
-//    	savePlayerState();
     }
 
     public void incrLosses() {
     	losses++;
-//    	savePlayerState();
     }
 
     public void incrDraws() {
     	draws++;
-//    	savePlayerState();
     }
 
     public void setMarker(String marker) {
-    	if (marker.length() != 1) throw new IllegalArgumentException("Marker length should be equal to 1.");
+    	if (marker.length() != 1) throw new InvalidMarkerException("Marker length should be equal to 1.");
     	this.marker = marker;
     }
 
     public String getRecord() {
-        return "Player " + username + ": " + wins + "-" + losses + "-" + draws;
+        return this.toString();
     }
     
     public int getWins() {
@@ -73,8 +76,8 @@ public abstract class Player {
 	public boolean equals(Object a) {
 		if (!(a instanceof Player)) return false;
 		Player otherPlayer = (Player)a;
-		//they are the same player if they have the same record string. this implies that they have the same username, wins, losses, and draws
-		if (this.getRecord().equals(otherPlayer.getRecord())) return true;
+		//they are the same player if they have the same username
+		if (this.username.equals(otherPlayer.getUsername())) return true;
 		else return false;
 	}
 	
@@ -83,19 +86,8 @@ public abstract class Player {
 		return username.hashCode() + wins + losses + draws;
 	}
 	
-	/* behavioral method */
-    
-	private void createNewPlayer(String username, String marker) {
-		this.username = username;
-		this.marker = marker;
-		this.wins = 0;
-		this.losses = 0;
-		this.draws = 0;
-//		savePlayerState(); TODO
-	}
-
-	public static Player retrievePlayer(String text, String text2) {
-		// TODO Auto-generated method stub
-		return null;
+	@Override
+	public String toString() {
+		return username + " (" + wins + "-" + losses + "-" + draws + ")";
 	}
 }

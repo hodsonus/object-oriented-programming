@@ -39,6 +39,7 @@ public class MainView {
     private String player2Username;
     private boolean player1Turn;
     private TTTControllerImpl ticTacToe;
+    private ExistingPlayers exP;
 	
     //public constructor
 	public MainView() {
@@ -48,6 +49,7 @@ public class MainView {
 		this.root.setCenter(buildSetupPane());
 		this.ticTacToe = new TTTControllerImpl();
 		this.player1Turn = true;
+		this.exP = ExistingPlayers.getInstance();
 	}
 	
 	public Scene getMainScene() {
@@ -154,7 +156,7 @@ public class MainView {
 			p1DoesntExist.add(player1MarkerField,   0, 7);
 		//GridPane to show if player1 is going to be an existing player
 		GridPane p1Exists = new GridPane();
-			ListView<Player> existingOptionsP1 = new ListView<Player>();
+			ListView<String> existingOptionsP1 = new ListView<String>();
 			populateListView(existingOptionsP1);
 			p1Exists.add(existingOptionsP1, 0, 0);
 		//by default, have users input new player
@@ -178,7 +180,7 @@ public class MainView {
 			p2DoesntExist.add(player2MarkerField,   2, 7);
 		//similar to above, instantiate GridPane to show to users when they want to retrieve an existing player
 		GridPane p2Exists = new GridPane();
-			ListView<Player> existingOptionsP2 = new ListView<Player>();
+			ListView<String> existingOptionsP2 = new ListView<String>();
 			populateListView(existingOptionsP2);
 			p2Exists.add(existingOptionsP2, 0, 0);
 		p2Exists.setVisible(false);
@@ -224,12 +226,18 @@ public class MainView {
            @Override 
            public void handle(MouseEvent e) { 
         	   
-        	   if ( player1NameTextField.getText().equals("") || "".equals(player1MarkerField.getText()) || "".equals(player2NameTextField.getText()) || "".equals(player2MarkerField.getText()) ) {
+        	   // isInvalid if the name field is empty or the marker field is empty AND we are creating a new player
+        	   // isInvalid if we are choosing an existing character and no player is selected
+        	   boolean player1SelectionIsInvalid = (("".equals(player1NameTextField.getText()) || "".equals(player1MarkerField.getText())) && !doesPlayer1ExistCheckbox.isSelected()) || (doesPlayer1ExistCheckbox.isSelected() && existingOptionsP2.getSelectionModel().getSelectedItem() == null);
+        	   boolean player2SelectionIsInvalid = (  ("".equals(player2NameTextField.getText()) || "".equals(player2MarkerField.getText())) && !doesPlayer2ExistCheckbox.isSelected() || (doesPlayer2ExistCheckbox.isSelected() && existingOptionsP2.getSelectionModel().getSelectedItem() == null));
+        	   
+        	   if ( player1SelectionIsInvalid || player2SelectionIsInvalid) {
         		   buildPlayerObjects(new Text("Invalid Input, please specify text to all fields."));
         		   return;
         	   }
         	   
         	   try {
+        		   System.out.println("craeting objects...");
 	        	   if (isPlayer1AICheckbox.isSelected()) {
 						ticTacToe.createAI(player1NameTextField.getText(), player1MarkerField.getText(), 1);
 	        	   } else {
@@ -258,10 +266,8 @@ public class MainView {
 		root.setCenter(formatGridPane(playerScreen, Pos.CENTER));
 	}
 	
-	//TODO, this should probably actually be in the Controller
-	private void populateListView(ListView<Player> existingOptions) {
-		ObservableList<Player> players = FXCollections.observableArrayList();
-		players.add(0, new Person("John"," "));
+	private void populateListView(ListView<String> existingOptions) {
+		ObservableList<String> players = exP.getRepresentations();
 		existingOptions.setItems(players);
 	}
 
@@ -345,7 +351,7 @@ public class MainView {
 	//called many times throughout the program, this resets the buttons and clears the root's top of text
 	private void addTopButtons() {
 		
-		// reset/quit buttons and their approptiate handlers
+		// reset/quit buttons and their appropriate handlers
 		Button resetButton = new Button("Reset");
         EventHandler<MouseEvent> resetEventHandler = new EventHandler<MouseEvent>() { 
            @Override 
@@ -364,6 +370,7 @@ public class MainView {
              @Override 
              public void handle(MouseEvent e) { 
             	 System.out.println("Game has been quit.");
+            	 exP.savePlayers();
             	 System.exit(0);
             	 return;
              }
@@ -534,6 +541,8 @@ public class MainView {
 	}
 	
 	private void endGame(Text topLabel) {
+   	 	exP.savePlayers();
+		
 		//put the topLabel on root's top with the appropriate end game message
 		GridPane textPane = new GridPane();
 		textPane.add(topLabel, 0, 0);
@@ -552,6 +561,7 @@ public class MainView {
         	@Override 
         	public void handle(MouseEvent e) { 
         		System.out.println("Game has been quit.");
+           	 	exP.savePlayers();
         		System.exit(0);
            } 
         };  
