@@ -2,9 +2,6 @@ package course.oop.other;
 
 import javafx.scene.layout.GridPane;
 
-/**
- * 
- */
 public class UltTicTacToe extends TicTacToe<TopBoard> {
 
     /**

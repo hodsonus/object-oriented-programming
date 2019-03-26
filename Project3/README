@@ -1,0 +1,20 @@
+To compile and run this code, please create a new Eclipse project from an existing directory.
+
+The existing directory should be the unzipped folder, 'course', and its contents as they are.
+
+The project can be then run from the main in the TTTDriver.java file (provided on canvas as a template) through eclipse. I have changed this class and added a main that plays this program with input from the command line.
+
+Some notes about the runtime behavior and the behavior of the classes that are implemented:
+	Custom runtime exceptions have been implemented. These are as follows and will be thrown if input to the object is provided when the object is not in a valid state:
+		InvalidAIOperation
+			occurs when an AI attempts to make a move with a coordinate specified (an AI should make a random move)
+		InvalidPersonOperation
+			occurs when a person attempts to make a move with no coordinate specified
+		GameInProgressException
+			occurs when a user attempts to create a new player when a game is in progress
+		GameNotInProgressException
+			occurs when a move is attempted and the game is not in progress (i.e. it has been quit, resulted in a victory, or resulted in a draw)
+		InvalidMarkerException
+			occurs when an invalid player marker is provided for a player object. often occurs when the marker is more than 1 character long
+		TurnTimeoutException
+			is thrown when a user takes too long to supply input to the program when it is their turn

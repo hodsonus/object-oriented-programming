@@ -42,8 +42,11 @@ public abstract class Player implements Serializable {
     	draws++;
     }
 
+    private boolean isValidMarker(String marker) {
+    	return marker.length() == 1 || (marker.length() == 2 && marker.charAt(0) >= 55357);
+    }
     public void setMarker(String marker) {
-    	if (marker.length() != 1) throw new InvalidMarkerException("Marker length should be equal to 1.");
+    	if (!isValidMarker(marker)) throw new InvalidMarkerException("Marker length should be equal to 1.");
     	this.marker = marker;
     }
 

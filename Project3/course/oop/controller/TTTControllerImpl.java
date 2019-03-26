@@ -40,20 +40,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		this.timeoutInSecs = timeoutInSecs;
 		this.numPlayers = numPlayers;
 		fillEmptyPlayers();
-				
-		//TODO, this is the logic for selecting between Ultimate Tic Tac Toe and Basic Tic Tac Toe
-//        System.out.println("Hello! Would you like to play Ultimate Tic Tac Toe, or just Basic Tic Tac Toe?");
-//		String response;
-//        do {
-//            System.out.println("Type \"Ultimate\" for the former or \"Basic\" for the latter.");
-//            response = sc.nextLine().toLowerCase(); 
-//        } while(!response.equals("ultimate") && !response.equals("basic"));
-//        System.out.println("Thanks! Trying that out now...");
-//
-//        if (response.equals("ultimate"))
-//            game = new UltTicTacToe();
-//        else //(response.equals("basic"))
-            game = new BasicTicTacToe();
+        game = new BasicTicTacToe();
         writeStartTime();
     }
 	

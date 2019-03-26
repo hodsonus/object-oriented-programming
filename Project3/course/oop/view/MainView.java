@@ -384,9 +384,7 @@ public class MainView {
           };  
         quitButton.addEventFilter(MouseEvent.MOUSE_CLICKED, quitEventHandler);
         
-        //label for viewing the current players turn
-        //TODO, make it prettier
-        
+        //label for viewing the current players turn        
         GridPane playerXTurn = new GridPane();
         playerXTurn.setAlignment(Pos.CENTER_RIGHT);
         playerXTurn.setPadding(new Insets(10, 10, 10, 10));

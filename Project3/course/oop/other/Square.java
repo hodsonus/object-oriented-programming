@@ -45,7 +45,7 @@ public class Square {
     
     @Override
     public String toString() {
-    	if (player == null) return "@";
+    	if (player == null) return "-";
     	return player.getMarker();
     }
     
