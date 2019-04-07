@@ -1,0 +1,20 @@
+@font-face {
+    src: url('OpenSansEmoji.ttf');
+}
+
+.root{ 
+	-fx-background-color: #FADBD8;
+	-fx-font-size: 16pt;
+	-fx-font-family: OpenSansEmoji;
+}
+
+.text-field {
+    -fx-font-family: OpenSansEmoji;
+}
+
+.button{
+	-fx-color: #D98880;
+}
+.button:hover{
+	-fx-color: #CD6155;
+}
