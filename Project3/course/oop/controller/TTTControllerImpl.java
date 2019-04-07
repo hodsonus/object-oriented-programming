@@ -10,18 +10,15 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	private Player player1, player2;
 	@SuppressWarnings("rawtypes")
 	private TicTacToe game;
-	private int numPlayers, timeoutInSecs;
+	private int timeoutInSecs;
 	private long startTime;
     private ExistingPlayers exP;
-    private boolean updatedPlayerState;
 	
 	public TTTControllerImpl() {
 		this.player1 = null;
 		this.player2 = null;
-		this.numPlayers = -1;
 		this.game = null;
 		this.exP = ExistingPlayers.getInstance();
-		updatedPlayerState = false;
 	}
 
 	/**
@@ -38,7 +35,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		if (!validNumPlayer(numPlayers)) throw new IllegalArgumentException();
 
 		this.timeoutInSecs = timeoutInSecs;
-		this.numPlayers = numPlayers;
 		fillEmptyPlayers();
         game = new BasicTicTacToe();
         writeStartTime();
@@ -48,14 +44,12 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		game.quitGame();
 		player1.incrDraws();
 		player2.incrDraws();
-		this.updatedPlayerState = false;
 	}
 	
 	public void resetGame() {
 		game.resetGame();
 		player1.incrDraws();
 		player2.incrDraws();
-		this.updatedPlayerState = false;
 	}
 	
 	private void fillEmptyPlayers() {

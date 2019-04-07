@@ -9,13 +9,12 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	private Player player1, player2;
 	@SuppressWarnings("rawtypes")
 	private TicTacToe game;
-	private int numPlayers, timeoutInSecs;
+	private int timeoutInSecs;
 	private long startTime;
 	
 	public TTTControllerImpl() {
 		this.player1 = null;
 		this.player2 = null;
-		this.numPlayers = -1;
 		this.game = null;
 	}
 
@@ -33,7 +32,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		if (!validNumPlayer(numPlayers)) throw new IllegalArgumentException();
 
 		this.timeoutInSecs = timeoutInSecs;
-		this.numPlayers = numPlayers;
 		fillEmptyPlayers();
 				
 		//TODO, this is the logic for selecting between Ultimate Tic Tac Toe and Basic Tic Tac Toe

@@ -78,6 +78,7 @@ public class ExistingPlayers {
 		players.put(player.getUsername(),player);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public ObservableList<Player> getRepresentations() {
 		
 		ObservableList<Player> oL = FXCollections.observableArrayList();
