@@ -128,20 +128,7 @@ public class MainView {
 	
 	public GridPane build2DArrayInputPane() {
         Button button1 = new Button("Random Insert"); 
-        
-        //TODO #5: Create a mouse event handler to call updateArrayValue()
-        //The following, indented code goes into the event handler
-	        //At some point, you could use text fields to input the row, col and value
-	        //updateArrayValue(rowTextField.getText(), colTextField.getText(), valTextField.getText());
-	
-	        //For now, we'll randomly generate values and pass them to the 
-	        //updateArrayValue() function as Strings
-	        /**
-			 * The method floor() gives the largest integer 
-			 * that is less than or equal to the argument.
-			 */
-        
-    	
+            	
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() { 
             @Override 
             public void handle(MouseEvent e) { 

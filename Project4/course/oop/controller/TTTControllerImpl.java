@@ -133,7 +133,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * @return
 	 */
 	@Override
-	public boolean setSelection(int row, int col, int currentPlayer) {
+	public boolean setSelection(Pair pos, int currentPlayer) {
 		if (!validUserTurnLength()) throw new TurnTimeoutException("User took too long to provide input to program.");
 		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
 		
@@ -148,7 +148,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 			currentPlayerObj = player2;
 		}
 
-		return game.attemptMove(currentPlayerObj, new OnePair(row, col));
+		return game.attemptMove(currentPlayerObj, pos);
 	}
 	
 	public void makeAISelection(int currentPlayer) {

@@ -94,16 +94,15 @@ public abstract class Player {
 		savePlayerState();
 	}
 		
-	//TODO implement this and save to the record based system
+	//implement this and save to the record based system
 	private void savePlayerState() {
 		//save the username and the record only
 	}
     private boolean playerRecordExists(String username) {
-    	//TODO
     	return false;
     }
     private void restorePlayer(String username, String marker) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 }

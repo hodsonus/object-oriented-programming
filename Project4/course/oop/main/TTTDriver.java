@@ -2,6 +2,7 @@ package course.oop.main;
 
 import java.util.Scanner;
 import course.oop.controller.*;
+import course.oop.other.OnePair;
 import course.oop.other.exceptions.InvalidMarkerException;
 import course.oop.other.exceptions.TurnTimeoutException;
 
@@ -26,23 +27,23 @@ public class TTTDriver {
 		System.out.println(ticTacToe.getGameDisplay());
 
 		// play game
-		isSelectionValid = ticTacToe.setSelection(0, 0, 2);
+		isSelectionValid = ticTacToe.setSelection(new OnePair(0,0), 2);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
-		isSelectionValid = ticTacToe.setSelection(0, 2, 1);
+		isSelectionValid = ticTacToe.setSelection(new OnePair(0,2), 1);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
-		isSelectionValid = ticTacToe.setSelection(1, 0, 2);
+		isSelectionValid = ticTacToe.setSelection(new OnePair(1,0), 2);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
-		isSelectionValid = ticTacToe.setSelection(1, 2, 1);
+		isSelectionValid = ticTacToe.setSelection(new OnePair(1,2), 1);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
-		isSelectionValid = ticTacToe.setSelection(2, 0, 2);
+		isSelectionValid = ticTacToe.setSelection(new OnePair(2,0), 2);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
 
-		isSelectionValid = ticTacToe.setSelection(1, 1, 2);
+		isSelectionValid = ticTacToe.setSelection(new OnePair(1,1), 2);
 		checkForInvalidLocation(isSelectionValid);
 		System.out.println(ticTacToe.getGameDisplay());
 
@@ -285,6 +286,6 @@ public class TTTDriver {
 		int row = getPos(sc);
 		System.out.print("col: ");
 		int col = getPos(sc);
-		return ticTacToe.setSelection(row, col, x);
+		return ticTacToe.setSelection(new OnePair(row,col), x);
 	}
 }

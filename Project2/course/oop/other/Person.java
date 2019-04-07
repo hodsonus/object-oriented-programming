@@ -19,7 +19,7 @@ public class Person extends Player {
      * @return
      */
     public Pair requestMove() {
-        // TODO implement here
+        // implement here
         return null;
     }
 

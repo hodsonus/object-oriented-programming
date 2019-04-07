@@ -1,9 +1,5 @@
 package course.oop.other;
 
-import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
 public class Square {
@@ -65,17 +61,20 @@ public class Square {
 			else return;
 		}
 		
-        EventHandler<MouseEvent> markerHandler = new EventHandler<MouseEvent>() { 
-            @Override 
-            public void handle(MouseEvent e) { 
-            	Node source = (Node)e.getSource() ;
-                Integer col = GridPane.getColumnIndex(source);
-                Integer row = GridPane.getRowIndex(source);
-                System.out.println("Cell clicked: " + row + "," + col);
-         	}
-         };
-         
-         rep.addEventFilter(MouseEvent.MOUSE_CLICKED, markerHandler);
+//        EventHandler<MouseEvent> markerHandler = new EventHandler<MouseEvent>() { 
+//            @Override 
+//            public void handle(MouseEvent e) { 
+//            	
+//            	Node bottom = (Node)e.getSource();
+//                Integer bottomCol = GridPane.getColumnIndex(bottom);
+//                Integer bottomRow = GridPane.getRowIndex(bottom);
+//                Integer topCol = GridPane.getColumnIndex(bottom.getParent());
+//                Integer topRow = GridPane.getRowIndex(bottom.getParent());
+//                
+//                System.out.println("In game " + topRow + "," + topCol + ": cell " + bottomRow + "," + bottomCol + " clicked.");
+//         	}
+//         };
+//         rep.addEventFilter(MouseEvent.MOUSE_CLICKED, markerHandler);
     }
 
 	public Text getGuiDisplay() {

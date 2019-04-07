@@ -48,40 +48,34 @@ public class BottomBoard extends Board<Square> {
 	}
 	
 	@Override
-	public GridPane getGuiDisplay(boolean scaleSquares) {
+	public GridPane getGuiDisplay(boolean absoluteSquares) {
 		
 		GridPane guiRep = new GridPane();
-	
-		if (scaleSquares) {
-			ColumnConstraints columnConst;
-			RowConstraints rowConst;
-			int cellSize = 100;
-			for (int i = 0; i < 3; i++) {
-				rowConst = new RowConstraints();
+
+		ColumnConstraints columnConst;
+		RowConstraints rowConst;
+		int cellSize = 100;
+		for (int i = 0; i < 3; i++) {
+			
+			rowConst = new RowConstraints();
+			columnConst = new ColumnConstraints();
+			
+			if (absoluteSquares) {
 				rowConst.setMinHeight(cellSize);
 				rowConst.setMaxHeight(cellSize);
-				columnConst = new ColumnConstraints();
 				columnConst.setMinWidth(cellSize);
 				columnConst.setMaxWidth(cellSize);
-				columnConst.setHalignment(HPos.CENTER);
-				guiRep.getColumnConstraints().add(columnConst);
-				guiRep.getRowConstraints().add(rowConst);
-			}
-		}
-		else {
-			ColumnConstraints columnConst;
-			RowConstraints rowConst;			
-			for (int i = 0; i < 3; i++) {
-				rowConst = new RowConstraints();
+			}			
+			else {
 				rowConst.setPercentHeight(100/3);
-				columnConst = new ColumnConstraints();
 				columnConst.setPercentWidth(100/3);
-				columnConst.setHalignment(HPos.CENTER);
-				guiRep.getColumnConstraints().add(columnConst);
-				guiRep.getRowConstraints().add(rowConst);
 			}
+			
+			columnConst.setHalignment(HPos.CENTER);
+			guiRep.getColumnConstraints().add(columnConst);
+			guiRep.getRowConstraints().add(rowConst);
 		}
-
+         
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid.length; j++) {
 				Text currText = grid[i][j].getGuiDisplay();

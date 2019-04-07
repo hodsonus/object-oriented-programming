@@ -31,38 +31,38 @@ public class UltTicTacToe extends TicTacToe<TopBoard> {
 
 	@Override
 	public boolean attemptMove(Player currentPlayerObj, Pair pair) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean attemptMove(Player currentPlayerObj) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getDisplay() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected GameStatus updateStatus(Pair pair) {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		//iterate over bottomboards and check the status
 		return null;
 	}
 
 	@Override
 	public void resetGame() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 
 	@Override
 	public void quitGame() {
-		// TODO Auto-generated method stub
+		// Auto-generated method stub
 		
 	}
 }
