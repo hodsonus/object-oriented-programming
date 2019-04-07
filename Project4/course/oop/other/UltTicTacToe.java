@@ -42,7 +42,7 @@ public class UltTicTacToe extends TicTacToe {
 		boolean validMove = board.attemptMove(currentPlayerObj, bothMoves);
 		if (validMove) {
 			updateStatus(bothMoves.pair2);
-			System.out.println(board);
+//			System.out.println(board);
 		}
 		
 		return validMove;
@@ -51,15 +51,15 @@ public class UltTicTacToe extends TicTacToe {
 	@Override
 	public boolean attemptMove(Player currentPlayerObj) {
 		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
-		int outerRow, outerCol, innerRow, innerCol;
-//		int iter = 0;
+		int outerRow, outerCol, innerRow, innerCol, maxIter = 50000;
+		int iter = 0;
 		do {
 			outerRow = randInt(0,2);
 			outerCol = randInt(0,2);
 			innerRow = randInt(0,2);
 			innerCol = randInt(0,2);
-//			iter++;
-		} while(   !attemptMove(currentPlayerObj, new TwoPair(new OnePair(outerRow, outerCol), new OnePair(innerRow, innerCol)))  );
+			iter++;
+		} while(   !attemptMove(currentPlayerObj, new TwoPair(new OnePair(outerRow, outerCol), new OnePair(innerRow, innerCol))) && iter<maxIter  );
 		return true;
 	}
 }

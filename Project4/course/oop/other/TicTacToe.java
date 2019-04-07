@@ -64,6 +64,10 @@ public abstract class TicTacToe {
 		if (board == null) throw new GameNotInProgressException();
 		return board.toString();
 	} 
+	
+	public boolean attemptRandomMove(Player currentPlayerObj) {
+		return attemptMove(currentPlayerObj);
+	}
     
     public abstract void resetGame(); // you should be able to reset the game if the game has ended or if the game is in progress
     public abstract boolean attemptMove(Player currentPlayerObj, Pair pair);

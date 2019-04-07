@@ -31,7 +31,7 @@ public class BasicTicTacToe extends TicTacToe {
 		boolean validMove = board.attemptMove(currentPlayerObj, move);
 		if (validMove){
 			updateStatus(move);
-			System.out.println(board);
+//			System.out.println(board);
 		}
 		return validMove;
 	}
