@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -427,24 +428,23 @@ public class MainView {
 		// or alternatively, from MainView -> TTTControllerImpl -> UltTicTacToe
 		// -> TopBoard -> BottomBoard -> Square
 		GridPane display = ticTacToe.getGUIDisplay();
-
-		// TODO, add event filters for each of the REPs
-		// EventHandler<MouseEvent> markerHandler = new
-		// EventHandler<MouseEvent>() {
-		// @Override
-		// public void handle(MouseEvent e) {
-		//
-		// Node bottom = (Node)e.getSource();
-		// Integer bottomCol = GridPane.getColumnIndex(bottom);
-		// Integer bottomRow = GridPane.getRowIndex(bottom);
-		// Integer topCol = GridPane.getColumnIndex(bottom.getParent());
-		// Integer topRow = GridPane.getRowIndex(bottom.getParent());
-		//
-		// System.out.println("In game " + topRow + "," + topCol + ": cell " +
-		// bottomRow + "," + bottomCol + " clicked.");
-		// }
-		// };
-		// rep.addEventFilter(MouseEvent.MOUSE_CLICKED, markerHandler);
+		
+		ObservableList<Node> topLevelChildren = display.getChildren();
+		
+		for (Node topLevelChild : topLevelChildren) {
+			if (topLevelChild instanceof Text) {
+				regsiterSquareEvent((Text)topLevelChild);
+			}
+			else if (topLevelChild instanceof GridPane) {
+				GridPane topLevelGridPane = (GridPane)topLevelChild;
+				ObservableList<Node> bottomLevelChildren = topLevelGridPane.getChildren(); 
+				for (Node bottomLevelChild : bottomLevelChildren) {
+					if (bottomLevelChild instanceof Text) {
+						regsiterSquareEvent((Text)bottomLevelChild);
+					}
+				}
+			}
+		}
 
 		// align it in the center
 		display.setAlignment(Pos.CENTER);
@@ -452,6 +452,24 @@ public class MainView {
 
 		// setup buttons on the bottom
 		setupUserMoveInputScreen();
+	}
+
+	private void regsiterSquareEvent(Text child) {
+		 EventHandler<MouseEvent> markerHandler = new EventHandler<MouseEvent>() {
+			 @Override
+			 public void handle(MouseEvent e) {
+			
+				 Node bottom = (Node)e.getSource();
+				 Integer bottomCol = GridPane.getColumnIndex(bottom);
+				 Integer bottomRow = GridPane.getRowIndex(bottom);
+				 Integer topCol = GridPane.getColumnIndex(bottom.getParent());
+				 Integer topRow = GridPane.getRowIndex(bottom.getParent());
+				
+				 System.out.println("In game " + topRow + "," + topCol + ": cell " +
+				 bottomRow + "," + bottomCol + " clicked.");
+			}
+		 };
+		 child.addEventFilter(MouseEvent.MOUSE_CLICKED, markerHandler);
 	}
 
 	// this method is responsible for taking in user input and updating the
