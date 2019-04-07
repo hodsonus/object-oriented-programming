@@ -53,12 +53,24 @@ public class BottomBoard extends Board<Square> {
 		GridPane guiRep = new GridPane();
 	
 		if (scaleSquares) {
-			ColumnConstraints columnConst;/* = new ColumnConstraints();
-			columnConst.setPercentWidth(75.0/3);*/
-			RowConstraints rowConst;/* = new RowConstraints();
-			rowConst.setPercentHeight(75/3);*/
+			ColumnConstraints columnConst;
+			RowConstraints rowConst;
 			int cellSize = 100;
-			
+			for (int i = 0; i < 3; i++) {
+				rowConst = new RowConstraints();
+				rowConst.setMinHeight(cellSize);
+				rowConst.setMaxHeight(cellSize);
+				columnConst = new ColumnConstraints();
+				columnConst.setMinWidth(cellSize);
+				columnConst.setMaxWidth(cellSize);
+				columnConst.setHalignment(HPos.CENTER);
+				guiRep.getColumnConstraints().add(columnConst);
+				guiRep.getRowConstraints().add(rowConst);
+			}
+		}
+		else {
+			ColumnConstraints columnConst;
+			RowConstraints rowConst;			
 			for (int i = 0; i < 3; i++) {
 				rowConst = new RowConstraints();
 				rowConst.setPercentHeight(100/3);

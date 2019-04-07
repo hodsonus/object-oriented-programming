@@ -1,5 +1,3 @@
 package course.oop.other;
 
-public interface Pair {
-
-}
+public interface Pair {}

@@ -30,8 +30,13 @@ public class TopBoard extends Board<BottomBoard> {
 		OnePair currTopMove = currbothMoves.pair1;
 		OnePair currBottomMove = currbothMoves.pair2;
 
-		if (lastBottomMove != null && !lastBottomMove.equals(currTopMove)) {
-			return false;
+		if (lastBottomMove != null) {
+			if (grid[lastBottomMove.row][lastBottomMove.col].getStatus() != GameStatus.ongoing) {
+				lastBottomMove = null;
+			}
+			else if (!lastBottomMove.equals(currTopMove)) {
+				return false;
+			}
 		}
 		
 		int row, col;
@@ -39,14 +44,13 @@ public class TopBoard extends Board<BottomBoard> {
 		col = currTopMove.col;
 		
 		if (!isValidPos(row) || !isValidPos(col)) return false;
-		if (grid[row][col].getWinningPlayer() != null) return false;
+		if (grid[row][col].getStatus() != GameStatus.ongoing) return false;
 		
 		boolean moveSuccess = grid[row][col].attemptMove(player, currBottomMove);
 		
 		if (moveSuccess) {
 			updateStatus(currTopMove);
-			if (grid[row][col].getWinningPlayer() == null) this.lastBottomMove = currBottomMove;
-			else this.lastBottomMove = null;
+			lastBottomMove = currBottomMove;
 		}
 		return moveSuccess;
 	}
@@ -63,17 +67,14 @@ public class TopBoard extends Board<BottomBoard> {
 	}
 	
 	@Override
-	public GridPane getGuiDisplay(boolean scaleSqaures) {
+	public GridPane getGuiDisplay(boolean scaleSquares) {
 
 		GridPane guiRep = new GridPane();
 		
-		if (scaleSqaures) {
-			ColumnConstraints columnConst;/* = new ColumnConstraints();
-			columnConst.setPercentWidth(75.0/3);*/
-			RowConstraints rowConst;/* = new RowConstraints();
-			rowConst.setPercentHeight(75/3);*/
+		if (scaleSquares) {
+			ColumnConstraints columnConst;
+			RowConstraints rowConst;
 			int cellSize = 100;
-			
 			for (int i = 0; i < 3; i++) {
 				rowConst = new RowConstraints();
 				rowConst.setMinHeight(cellSize);
@@ -89,7 +90,8 @@ public class TopBoard extends Board<BottomBoard> {
 					
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid.length; j++) {
-				GridPane currPane = grid[i][j].getGuiDisplay(true);
+				GridPane currPane = grid[i][j].getGuiDisplay(false);
+				if (grid[i][j].getStatus() != GameStatus.ongoing) currPane.setStyle("-fx-background-color: #D98880;");
 				guiRep.add(currPane,j,i);
 			}
 		}
@@ -126,7 +128,7 @@ public class TopBoard extends Board<BottomBoard> {
 		boolean noVacancies = true;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				if (grid[i][j].getWinningPlayer() == null) {
+				if (grid[i][j].getStatus() == GameStatus.ongoing) {
 					noVacancies = false;
 					break;
 				}
