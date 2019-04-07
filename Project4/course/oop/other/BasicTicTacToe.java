@@ -29,7 +29,10 @@ public class BasicTicTacToe extends TicTacToe {
 				"Move must be an instance of OnePair, only one grid is viable at this depth.");
 		OnePair move = (OnePair)pair;
 		boolean validMove = board.attemptMove(currentPlayerObj, move);
-		if (validMove) updateStatus(move);
+		if (validMove){
+			updateStatus(move);
+			System.out.println(board);
+		}
 		return validMove;
 	}
 

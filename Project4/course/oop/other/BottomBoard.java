@@ -2,15 +2,10 @@ package course.oop.other;
 
 import java.util.List;
 import course.oop.other.exceptions.GameNotInProgressException;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.scene.text.Text;
 
 
@@ -66,11 +61,9 @@ public class BottomBoard extends Board<Square> {
 			
 			for (int i = 0; i < 3; i++) {
 				rowConst = new RowConstraints();
-				rowConst.setMinHeight(cellSize);
-				rowConst.setMaxHeight(cellSize);
+				rowConst.setPercentHeight(100/3);
 				columnConst = new ColumnConstraints();
-				columnConst.setMinWidth(cellSize);
-				columnConst.setMaxWidth(cellSize);
+				columnConst.setPercentWidth(100/3);
 				columnConst.setHalignment(HPos.CENTER);
 				guiRep.getColumnConstraints().add(columnConst);
 				guiRep.getRowConstraints().add(rowConst);

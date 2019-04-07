@@ -34,25 +34,31 @@ public class UltTicTacToe extends TicTacToe {
  
 	@Override
 	public boolean attemptMove(Player currentPlayerObj, Pair pair) {
+		
 		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
 		if (!(pair instanceof TwoPair)) throw new IllegalArgumentException(
 				"Move must be an instance of TwoPair, only two grids are viable at this depth.");
 		TwoPair bothMoves = (TwoPair)pair;
 		boolean validMove = board.attemptMove(currentPlayerObj, bothMoves);
-		if (validMove) updateStatus(bothMoves.pair2);
+		if (validMove) {
+			updateStatus(bothMoves.pair2);
+			System.out.println(board);
+		}
+		
 		return validMove;
 	}
 
 	@Override
 	public boolean attemptMove(Player currentPlayerObj) {
 		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
-		int outerRow, outerCol, innerRow, innerCol, iter = 0;
+		int outerRow, outerCol, innerRow, innerCol;
+//		int iter = 0;
 		do {
 			outerRow = randInt(0,2);
 			outerCol = randInt(0,2);
 			innerRow = randInt(0,2);
 			innerCol = randInt(0,2);
-			iter++;
+//			iter++;
 		} while(   !attemptMove(currentPlayerObj, new TwoPair(new OnePair(outerRow, outerCol), new OnePair(innerRow, innerCol)))  );
 		return true;
 	}

@@ -4,14 +4,9 @@ import java.util.List;
 
 import course.oop.other.exceptions.GameNotInProgressException;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.scene.paint.Color;
 
 public class TopBoard extends Board<BottomBoard> {
 	
@@ -40,16 +35,16 @@ public class TopBoard extends Board<BottomBoard> {
 		}
 		
 		int row, col;
-		row = currBottomMove.row;
-		col = currBottomMove.col;
+		row = currTopMove.row;
+		col = currTopMove.col;
 		
 		if (!isValidPos(row) || !isValidPos(col)) return false;
-		
 		if (grid[row][col].getWinningPlayer() != null) return false;
-		boolean moveSuccess = grid[row][col].attemptMove(player, currTopMove);
+		
+		boolean moveSuccess = grid[row][col].attemptMove(player, currBottomMove);
 		
 		if (moveSuccess) {
-			updateStatus(currBottomMove);
+			updateStatus(currTopMove);
 			if (grid[row][col].getWinningPlayer() == null) this.lastBottomMove = currBottomMove;
 			else this.lastBottomMove = null;
 		}
@@ -77,7 +72,7 @@ public class TopBoard extends Board<BottomBoard> {
 			columnConst.setPercentWidth(75.0/3);*/
 			RowConstraints rowConst;/* = new RowConstraints();
 			rowConst.setPercentHeight(75/3);*/
-			int cellSize = 100/9;
+			int cellSize = 100;
 			
 			for (int i = 0; i < 3; i++) {
 				rowConst = new RowConstraints();
@@ -91,7 +86,7 @@ public class TopBoard extends Board<BottomBoard> {
 				guiRep.getRowConstraints().add(rowConst);
 			}
 		}
-			
+					
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid.length; j++) {
 				GridPane currPane = grid[i][j].getGuiDisplay(true);
@@ -99,7 +94,7 @@ public class TopBoard extends Board<BottomBoard> {
 			}
 		}
 		
-//		guiRep.setGridLinesVisible(true);   
+		guiRep.setGridLinesVisible(true);   
 		
 		return guiRep;
 	}
@@ -144,5 +139,22 @@ public class TopBoard extends Board<BottomBoard> {
 		}
 		
 		return noVacancies;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder drawing = new StringBuilder("Game Status: ");
+		drawing.append(this.status.toString().toUpperCase());
+		
+		drawing.append("\n");
+		for (int i = 0; i < grid.length; i++) {
+			for (int j = 0; j < grid[i].length; j++) {
+				drawing.append("Row: " + i + ", Col: " + j + "\t");
+				drawing.append(grid[i][j].toString());
+				drawing.append("\n");
+			}
+			drawing.append("\n\n");
+		}
+		return drawing.toString();
 	}
 }
