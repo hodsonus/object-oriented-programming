@@ -98,7 +98,8 @@ public class TopBoard extends Board<BottomBoard> {
 		for (int i = 0; i < grid.length; i++) {
 			for (int j = 0; j < grid.length; j++) {
 				GridPane currPane = grid[i][j].getGuiDisplay(false);
-				if (grid[i][j].getStatus() != GameStatus.ongoing) currPane.setStyle("-fx-background-color: #D98880;");
+				if (grid[i][j].getStatus() != GameStatus.ongoing) currPane.setStyle("-fx-background-color: #CD6155;");
+				else if (lastBottomMove != null && i == lastBottomMove.row && j == lastBottomMove.col) currPane.setStyle("-fx-background-color: #D98880;");
 				guiRep.add(currPane,j,i);
 			}
 		}

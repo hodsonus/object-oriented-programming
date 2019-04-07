@@ -8,7 +8,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.geometry.HPos;
 import javafx.scene.text.Text;
 
-
 public class BottomBoard extends Board<Square> {
 
 	public BottomBoard() {

@@ -1,13 +1,14 @@
 package course.oop.view;
 
-import java.io.File;
-
 import course.oop.controller.InvalidAIOperation;
 import course.oop.controller.InvalidPersonOperation;
 import course.oop.controller.TTTControllerImpl;
 import course.oop.other.Player;
+import course.oop.other.TwoPair;
 import course.oop.other.ExistingPlayers;
 import course.oop.other.OnePair;
+import course.oop.other.Pair;
+import course.oop.other.exceptions.GameNotInProgressException;
 import course.oop.other.exceptions.InvalidMarkerException;
 import course.oop.other.exceptions.TurnTimeoutException;
 import javafx.collections.ObservableList;
@@ -26,6 +27,8 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ListView;
+
+import java.io.File;
 
 public class MainView {
 	// view attributes
@@ -466,100 +469,15 @@ public class MainView {
 				 Integer topRow = GridPane.getRowIndex(bottom.getParent());
 				
 				 System.out.println("In game " + topRow + "," + topCol + ": cell " +
-				 bottomRow + "," + bottomCol + " clicked.");
-			}
-		 };
-		 child.addEventFilter(MouseEvent.MOUSE_CLICKED, markerHandler);
-	}
-
-	// this method is responsible for taking in user input and updating the
-	// board object
-	private void setupUserMoveInputScreen() {
-		// instantiate out primary grid
-		GridPane entireScreen = new GridPane();
-		entireScreen.setVgap(5);
-		entireScreen.setHgap(8);
-		entireScreen.setPadding(new Insets(10, 10, 10, 10));
-
-		// label for viewing the current players turn
-		GridPane playerXTurn = new GridPane();
-		playerXTurn.setAlignment(Pos.CENTER_LEFT);
-		playerXTurn.setPadding(new Insets(10, 10, 10, 10));
-		String currentPlayer = player1Turn ? player1.getUsername() : player2.getUsername();
-		playerXTurn.add(new Text(currentPlayer + "'s turn"), 0, 0);
-
-		// setup user input fields
-		GridPane userInput = new GridPane();
-		userInput.setHgap(5);
-		userInput.setVgap(5);
-		userInput.setPadding(new Insets(10, 10, 10, 10));
-		Text rowInputLabel = new Text("Desired Row:");
-		TextField rowInputField = new TextField();
-		Text colInputLabel = new Text("Desired Col:");
-		TextField colInputField = new TextField();
-		Button submitUserInputButton = new Button("Submit User Move");
-
-		userInput.add(rowInputLabel, 0, 0);
-		userInput.add(rowInputField, 1, 0);
-		userInput.add(colInputLabel, 0, 1);
-		userInput.add(colInputField, 1, 1);
-		userInput.add(submitUserInputButton, 1, 2);
-
-		// setup AI input fields
-		GridPane AIInput = new GridPane();
-		AIInput.setHgap(5);
-		AIInput.setVgap(5);
-		AIInput.setPadding(new Insets(10, 10, 10, 10));
-		Button requestAIButton = new Button("Request AI Move");
-		AIInput.add(requestAIButton, 0, 0);
-
-		entireScreen.add(playerXTurn, 0, 0);
-		entireScreen.add(userInput, 0, 1);
-		entireScreen.add(AIInput, 0, 1);
-
-		// logic to hide/show the appropriate user display, dependent on state
-		if (player1Turn) {
-			if (ticTacToe.getPlayer(1).isAI()) {
-				userInput.setVisible(false);
-				AIInput.setVisible(true);
-			} else {
-				userInput.setVisible(true);
-				AIInput.setVisible(false);
-			}
-		} else {
-			if (ticTacToe.getPlayer(2).isAI()) {
-				userInput.setVisible(false);
-				AIInput.setVisible(true);
-			} else {
-				userInput.setVisible(true);
-				AIInput.setVisible(false);
-			}
-		}
-
-		// event handler for the submission of the user input
-		EventHandler<MouseEvent> submitEventHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent e) {
-				int row;
-				int col;
-				// try to parse them, and if they arent valid, then dont do
-				// anything
-				try {
-					row = Integer.parseInt(rowInputField.getText());
-					col = Integer.parseInt(colInputField.getText());
-				} catch (NumberFormatException nfe) {
-					// GridPane y = ((GridPane)root.getTop());
-					// updateView();
-					// y.add(new Text("Not a valid integer to index with."), 0,
-					// 1);
-					// y.setPadding(new Insets(10, 10, 10, 10));
-					return;
-				}
-				// if the numbers were valid, make a call to the board and print
-				// to our logging terminal
-				supplyMove(row, col);
-				System.out.println("User supplied a move. Row: " + row + ". Col: " + col);
-
+						 			bottomRow + "," + bottomCol + " clicked.");
+				 
+				 if (topCol == null && topRow == null) { // then we are playing in a basic game
+					 supplyMove(new OnePair(bottomRow,bottomCol));
+				 }
+				 else { // we are playing an ultimate game
+					 supplyMove(new TwoPair(new OnePair(topRow,topCol), new OnePair(bottomRow,bottomCol)));
+				 }
+				 
 				/* checkWinner() */
 				int winner = ticTacToe.determineWinner();
 				String resultString;
@@ -586,10 +504,46 @@ public class MainView {
 				updateView();
 				// write the start time for the next move
 				ticTacToe.writeStartTime();
-				return;
 			}
-		};
-		submitUserInputButton.addEventFilter(MouseEvent.MOUSE_CLICKED, submitEventHandler);
+		 };
+		 child.addEventFilter(MouseEvent.MOUSE_CLICKED, markerHandler);
+	}
+
+	// this method is responsible for taking in user input and updating the
+	// board object
+	private void setupUserMoveInputScreen() {
+		// instantiate out primary grid
+		GridPane entireScreen = new GridPane();
+		entireScreen.setVgap(5);
+		entireScreen.setHgap(8);
+		entireScreen.setPadding(new Insets(10, 10, 10, 10));
+
+		// label for viewing the current players turn
+		GridPane playerXTurn = new GridPane();
+		playerXTurn.setAlignment(Pos.CENTER_LEFT);
+		playerXTurn.setPadding(new Insets(10, 10, 10, 10));
+		String currentPlayer = player1Turn ? player1.getUsername() : player2.getUsername();
+		playerXTurn.add(new Text(currentPlayer + "'s turn"), 0, 0);
+
+		// setup AI input fields
+		GridPane AIInput = new GridPane();
+		AIInput.setHgap(5);
+		AIInput.setVgap(5);
+		AIInput.setPadding(new Insets(10, 10, 10, 10));
+		Button requestAIButton = new Button("Request AI Move");
+		AIInput.add(requestAIButton, 0, 0);
+
+		entireScreen.add(playerXTurn, 0, 0);
+		entireScreen.add(AIInput, 0, 1);
+
+		// logic to hide/show the appropriate user display, dependent on state
+		if (player1Turn) {
+			if (ticTacToe.getPlayer(1).isAI()) AIInput.setVisible(true);
+			else AIInput.setVisible(false);
+		} else {
+			if (ticTacToe.getPlayer(2).isAI()) AIInput.setVisible(true);
+			else AIInput.setVisible(false);
+		}
 
 		EventHandler<MouseEvent> requestAIHandler = new EventHandler<MouseEvent>() {
 			@Override
@@ -722,65 +676,47 @@ public class MainView {
 		root.setBottom(buttonPane);
 	}
 
-	private void supplyMove(int row, int col) {
+	private void supplyMove(Pair move) {
 		boolean valid;
 		// attempt a user move, using the current user
 		try {
 			if (player1Turn) {
-				valid = ticTacToe.setSelection(new OnePair(row, col), 1);
+				valid = ticTacToe.setSelection(move, 1);
 			} else {
-				valid = ticTacToe.setSelection(new OnePair(row, col), 2);
+				valid = ticTacToe.setSelection(move, 2);
 			}
 		}
 		// handle invalid player attempting move
 		catch (InvalidAIOperation iaio) {
 			addTopButtons();
-			GridPane y = ((GridPane) root.getTop());
-
-			Text errorMessage = new Text("Please supply an AI's move, current player is not a person.");
-			GridPane errorMessageWrapper = new GridPane();
-			errorMessageWrapper.add(errorMessage, 0, 0);
-			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
-			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
-			y.add(errorMessageWrapper, 0, 1);
+			updateErrorMessage(new Text("Please supply an AI's move, current player is not a person."));
 			return;
 		}
 		// handle timeouts and print errors
 		catch (TurnTimeoutException tte) {
 			player1Turn = !player1Turn;
 			addTopButtons();
-			GridPane y = ((GridPane) root.getTop());
-			Text errorMessage = new Text("User took too long to supply input, forfeiting turn...");
-			GridPane errorMessageWrapper = new GridPane();
-			errorMessageWrapper.add(errorMessage, 0, 0);
-			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
-			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
-			y.add(errorMessageWrapper, 0, 1);
+			updateErrorMessage(new Text("User took too long to supply input, forfeiting turn..."));
 			return;
 		}
+		catch (GameNotInProgressException gnipe) {
+			//TODO
+			System.out.println("Cell was clicked after the game ended.");
+			valid = false;
+		}
 		// switch turns and then clear the messages
-		player1Turn = !player1Turn;
 		addTopButtons();
+		Text errorMessage;
 		// if it was valid, indicate so
 		if (valid) {
-			GridPane y = ((GridPane) root.getTop());
-			Text errorMessage = new Text("Successful placement!");
-			GridPane errorMessageWrapper = new GridPane();
-			errorMessageWrapper.add(errorMessage, 0, 0);
-			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
-			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
-			y.add(errorMessageWrapper, 0, 1);
+			player1Turn = !player1Turn;
+			errorMessage = new Text("Successful placement!");
 		}
 		// if it was invalid, indicate so
 		else {
-			GridPane y = ((GridPane) root.getTop());
-			Text errorMessage = new Text("Move was not valid, forfeiting turn...");
-			GridPane errorMessageWrapper = new GridPane();
-			errorMessageWrapper.add(errorMessage, 0, 0);
-			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
-			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
-			y.add(errorMessageWrapper, 0, 1);
+			errorMessage = new Text("Move was not valid, please try again.");
 		}
+		updateErrorMessage(errorMessage);
 	}
 
 	private void requestAIMove() {
@@ -795,26 +731,14 @@ public class MainView {
 		// catch invalid users attempting AI moves
 		catch (InvalidPersonOperation ipo) {
 			addTopButtons();
-			GridPane y = ((GridPane) root.getTop());
-			Text errorMessage = new Text("Please supply a person's move, current player is not an AI.");
-			GridPane errorMessageWrapper = new GridPane();
-			errorMessageWrapper.add(errorMessage, 0, 0);
-			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
-			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
-			y.add(errorMessageWrapper, 0, 1);
+			updateErrorMessage(new Text("Please supply a person's move, current player is not an AI."));
 			return;
 		}
 		// catch timeouts and skip their turn
 		catch (TurnTimeoutException tte) {
 			player1Turn = !player1Turn;
 			addTopButtons();
-			GridPane y = ((GridPane) root.getTop());
-			Text errorMessage = new Text("User took too long to supply input, forfeiting turn...");
-			GridPane errorMessageWrapper = new GridPane();
-			errorMessageWrapper.add(errorMessage, 0, 0);
-			errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
-			errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
-			y.add(errorMessageWrapper, 0, 1);
+			updateErrorMessage(new Text("User took too long to supply input, forfeiting turn..."));
 			return;
 		}
 
@@ -824,10 +748,13 @@ public class MainView {
 		// print message to topPane (AI moves are always successful if there are
 		// available spaces)
 		addTopButtons();
+		updateErrorMessage(new Text("Successful placement!"));
+	}
+
+	private void updateErrorMessage(Text text) {
 		GridPane y = ((GridPane) root.getTop());
-		Text errorMessage = new Text("Successful placement!");
 		GridPane errorMessageWrapper = new GridPane();
-		errorMessageWrapper.add(errorMessage, 0, 0);
+		errorMessageWrapper.add(text, 0, 0);
 		errorMessageWrapper.setAlignment(Pos.CENTER_LEFT);
 		errorMessageWrapper.setPadding(new Insets(10, 10, 10, 10));
 		y.add(errorMessageWrapper, 0, 1);
