@@ -60,6 +60,7 @@ public abstract class TicTacToe {
 	public GridPane getGuiDisplay() {
 		return board.getGuiDisplay(true);
 	}	
+	
 	public String getDisplay() {
 		if (board == null) throw new GameNotInProgressException();
 		return board.toString();
@@ -70,7 +71,7 @@ public abstract class TicTacToe {
 	}
     
     public abstract void resetGame(); // you should be able to reset the game if the game has ended or if the game is in progress
-    public abstract boolean attemptMove(Player currentPlayerObj, Pair pair);
+    public abstract boolean attemptMove(Player currentPlayerObj, Coordinate move);
 	public abstract boolean attemptMove(Player currentPlayerObj);
     public abstract String getRules();
 }

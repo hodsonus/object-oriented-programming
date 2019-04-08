@@ -10,7 +10,7 @@
 
 package course.oop.controller;
 
-import course.oop.other.Pair;
+import course.oop.other.Coordinate;
 import course.oop.other.Player;
 
 public interface TTTControllerInterface {
@@ -46,7 +46,7 @@ public interface TTTControllerInterface {
 	 * @param currentPlayer Must be valid. 1 = player1; 2 = player2
 	 * @return
 	 */
-	boolean setSelection(Pair pos, int currentPlayer);
+	boolean setSelection(Coordinate pos, int currentPlayer);
 	
 	/**
 	 * Determines if there is a winner and returns the following:

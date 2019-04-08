@@ -83,8 +83,7 @@ public abstract class Board<T> {
 
 	protected abstract boolean checkSamePlayer(List<OnePair> lis); 
 	protected abstract boolean noVacancies();
-
 	public abstract void resetBoard();
-	public abstract boolean attemptMove(Player player, Pair move);
+	public abstract boolean attemptMove(Player player, Coordinate move);
 	public abstract GridPane getGuiDisplay(boolean scaleSquares);
 }

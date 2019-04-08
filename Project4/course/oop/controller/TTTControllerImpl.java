@@ -133,7 +133,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * @return
 	 */
 	@Override
-	public boolean setSelection(Pair pos, int currentPlayer) {
+	public boolean setSelection(Coordinate pos, int currentPlayer) {
 		if (!validUserTurnLength()) throw new TurnTimeoutException("User took too long to provide input to program.");
 		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
 		

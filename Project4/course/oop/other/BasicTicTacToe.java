@@ -23,7 +23,7 @@ public class BasicTicTacToe extends TicTacToe {
     }
     
 	@Override
-	public boolean attemptMove(Player currentPlayerObj, Pair pair) {
+	public boolean attemptMove(Player currentPlayerObj, Coordinate pair) {
 		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
 		if (!(pair instanceof OnePair)) throw new IllegalArgumentException(
 				"Move must be an instance of OnePair, only one grid is viable at this depth.");

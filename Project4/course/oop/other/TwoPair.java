@@ -5,7 +5,7 @@ package course.oop.other;
  * pair1 corresponding to the position in the first level and pair2
  * corresponding to the move on the nested game.
  */
-public class TwoPair implements Pair {
+public class TwoPair implements Coordinate {
 
     /**
      * constructor

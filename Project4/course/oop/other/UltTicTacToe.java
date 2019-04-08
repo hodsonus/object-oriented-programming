@@ -33,7 +33,7 @@ public class UltTicTacToe extends TicTacToe {
 	}    
  
 	@Override
-	public boolean attemptMove(Player currentPlayerObj, Pair pair) {
+	public boolean attemptMove(Player currentPlayerObj, Coordinate pair) {
 		
 		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
 		if (!(pair instanceof TwoPair)) throw new IllegalArgumentException(

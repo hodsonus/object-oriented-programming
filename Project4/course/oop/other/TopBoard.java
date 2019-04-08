@@ -18,7 +18,7 @@ public class TopBoard extends Board<BottomBoard> {
     }
     
 	@Override
-	public boolean attemptMove(Player player, Pair move) {
+	public boolean attemptMove(Player player, Coordinate move) {
 		
 		if (!(move instanceof TwoPair))
 			throw new IllegalArgumentException(

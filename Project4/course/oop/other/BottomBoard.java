@@ -15,7 +15,7 @@ public class BottomBoard extends Board<Square> {
 	}
 
 	@Override
-	public boolean attemptMove(Player player, Pair move) {
+	public boolean attemptMove(Player player, Coordinate move) {
 		if (!(move instanceof OnePair))
 			throw new IllegalArgumentException(
 					"Move must be an instance of OnePair, only one grid is viable at this depth.");

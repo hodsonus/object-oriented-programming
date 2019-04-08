@@ -1,6 +1,6 @@
 package course.oop.other;
 
-public class OnePair implements Pair {
+public class OnePair implements Coordinate {
 
     public OnePair(int row, int col) {
     	this.row = row;

@@ -7,7 +7,7 @@ import course.oop.other.Player;
 import course.oop.other.TwoPair;
 import course.oop.other.ExistingPlayers;
 import course.oop.other.OnePair;
-import course.oop.other.Pair;
+import course.oop.other.Coordinate;
 import course.oop.other.exceptions.GameNotInProgressException;
 import course.oop.other.exceptions.InvalidMarkerException;
 import course.oop.other.exceptions.TurnTimeoutException;
@@ -676,7 +676,7 @@ public class MainView {
 		root.setBottom(buttonPane);
 	}
 
-	private void supplyMove(Pair move) {
+	private void supplyMove(Coordinate move) {
 		boolean valid;
 		// attempt a user move, using the current user
 		try {
