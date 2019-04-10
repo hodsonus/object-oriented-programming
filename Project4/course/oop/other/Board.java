@@ -7,9 +7,12 @@ public abstract class Board {
 	
     protected GameStatus status;
     protected Player winningPlayer;
-
-    public Board() {
-    	winningPlayer = null;
+    protected int size;
+    
+    public Board(int desiredSize) {
+    	this.size = desiredSize;
+    	this.winningPlayer = null;
+    	resetBoard();
     }
     
     public Player getWinningPlayer() {
@@ -17,7 +20,7 @@ public abstract class Board {
     }
     	
 	protected boolean isValidPos(int pos) {
-		return pos >= 0 && pos < 3;
+		return pos >= 0 && pos < size;
 	}
 	
 	public void quit() {

@@ -37,8 +37,8 @@ public class MainView {
 	// view attributes
 	private BorderPane root;
 	private Scene scene;
-	private final int windowWidth = 700;
-	private final int windowHeight = 700;
+	private final int windowWidth = 1000;
+	private final int windowHeight = 1000;
 
 	// basic control attributes (mirrors TTTDriver from Project2)
 	private Player player1;
@@ -318,9 +318,9 @@ public class MainView {
 		Text sizeOfGameLabel = new Text("Size of game: ");
 		TextField sizeOfGameField = new TextField();
 
-		String basicString = "Basic";
-		String ultString = "Ultimate";
-		String threeDimString = "Three Dimensional (n x n x n)";
+		String basicString = "Basic (NxN)";
+		String ultString = "Ultimate (3x3s nested in a 3x3)";
+		String threeDimString = "Three Dimensional (NxNxN)";
 		
 		// check box to determine if we are playing ultimate tic tac toe or not
 		Text gameTypeLabel = new Text("Type of game: ");		
@@ -334,8 +334,6 @@ public class MainView {
 
 		startNewGameScreen.add(sizeOfGameLabel, 0, 1);
 		startNewGameScreen.add(sizeOfGameField, 1, 1);
-		sizeOfGameLabel.setVisible(false);
-		sizeOfGameField.setVisible(false);
 
 		startNewGameScreen.add(useTimerLabel, 0, 2);
 		startNewGameScreen.add(useTimerField, 1, 2);
@@ -358,8 +356,18 @@ public class MainView {
 				
 				int sizeOfGame;
 				if (basicString.equals(type)) {
+					try {
+						sizeOfGame = Integer.parseInt(sizeOfGameField.getText());
+						if (sizeOfGame < 3 || sizeOfGame > 5) {
+							startNewGame(new Text("Input to size of game field not valid (3, 4, or 5 are valid)."));
+							return;
+						}
+					}
+					catch (NumberFormatException nfe) {
+						startNewGame(new Text("Input to size of game field not a valid integer."));
+						return;
+					}
 					gameType = GameType.Basic;
-					sizeOfGame = 3;
 				}
 				else if (ultString.equals(type)) {
 					gameType = GameType.Ultimate;
@@ -368,8 +376,8 @@ public class MainView {
 				else if (threeDimString.equals(type)) {
 					try {
 						sizeOfGame = Integer.parseInt(sizeOfGameField.getText());
-						if (sizeOfGame < 3) { //TODO, consider adding a cap on game size
-							startNewGame(new Text("Input to size of game field not greater than 3."));
+						if (sizeOfGame < 3 || sizeOfGame > 5) {
+							startNewGame(new Text("Input to size of game field not valid (3, 4, or 5 are valid)."));
 							return;
 						}
 					}
@@ -423,7 +431,7 @@ public class MainView {
 
 		gameTypeField.getSelectionModel().selectedItemProperty().addListener( 
 				(obs, selectionWasEmpty, selectionIsNowEmpty) -> {
-					if (threeDimString.equals(gameTypeField.getValue())) {
+					if (threeDimString.equals(gameTypeField.getValue()) || basicString.equals(gameTypeField.getValue())) {
 						sizeOfGameLabel.setVisible(true);
 						sizeOfGameField.setVisible(true);
 					}

@@ -33,9 +33,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		
 		this.timeoutInSecs = timeoutInSecs;
 		fillEmptyPlayers();
-		
-		game = new ThreeDimTicTacToe(3); 
-		
+				
 		if (typeToInstantiate == GameType.Ultimate){
 			game = new UltTicTacToe(sizeOfGame);
 		}

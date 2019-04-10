@@ -8,10 +8,7 @@ public abstract class TicTacToe {
 	protected Board board;
     protected GameStatus status;
     protected Player winningPlayer;
-
-    public TicTacToe() {
-    	resetGame();
-    }
+    protected int size;
 
     public boolean isInProgress() {
 		return status == GameStatus.ongoing;

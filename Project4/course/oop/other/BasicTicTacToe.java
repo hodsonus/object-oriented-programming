@@ -4,8 +4,10 @@ import course.oop.other.exceptions.GameNotInProgressException;
 
 public class BasicTicTacToe extends TicTacToe {
 	
-	public BasicTicTacToe(int sizeOfGame) {
-		if (sizeOfGame != 3) throw new UnsupportedOperationException("At this time, there is no support for game size other than 3.");
+	public BasicTicTacToe(int desiredSize) {
+		if (desiredSize < 3 || desiredSize > 5) throw new UnsupportedOperationException("At this time, there is no support for game size other than 3, 4, and 5.");
+		this.size = desiredSize;
+		resetGame();
 	}
 	    
     @Override
@@ -18,7 +20,7 @@ public class BasicTicTacToe extends TicTacToe {
     
     @Override
     public void resetGame() {
-    	this.board = new BottomBoard();
+    	this.board = new BottomBoard(this.size);
     	updateStatus();
     }
     
@@ -41,8 +43,8 @@ public class BasicTicTacToe extends TicTacToe {
 		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
 		int row, col, iter = 0, max_iter=10000;
 		do {
-			row = randInt(0,2);
-			col = randInt(0,2);
+			row = randInt(0,size);
+			col = randInt(0,size);
 			iter++;
 		} while(   !attemptMove(currentPlayerObj, new OnePair(row, col)) && iter<max_iter   );
 		return true;

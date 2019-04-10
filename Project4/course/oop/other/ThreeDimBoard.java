@@ -11,12 +11,9 @@ import javafx.scene.transform.Rotate;
 public class ThreeDimBoard extends Board {
 	
     protected Square[][][] grid;  
-    private int size;
         
-    public ThreeDimBoard(int size) {
-    	super();
-    	this.size = size;
-    	resetBoard();
+    public ThreeDimBoard(int desiredSize) {
+    	super(desiredSize);
     }
     
     @Override
@@ -59,7 +56,8 @@ public class ThreeDimBoard extends Board {
 		status = GameStatus.ongoing;
 	}
 	
-	/* checks columns, rows, and depths. call using 0,y,z,1,0,0 */
+	/* checks columns, rows, and depths. call to iterate over the row containing y and z using 0,y,z, 1,0,0 
+	 * x,y,z are your initial values and a,b,c is how much you move by */
 	private boolean checkStraights(int x, int y, int z, int a, int b, int c) {
 		Player comparePlayer, currPlayer;
 		boolean samePlayer;
@@ -87,6 +85,79 @@ public class ThreeDimBoard extends Board {
 		
 		return samePlayer;
 	}
+	
+	private boolean iterateThreeDimsGeneric(int x, int y, int z, int a_x_diff, int a_y_diff, int a_z_diff, int b_x_diff, int b_y_diff, int b_z_diff) {
+		
+		if (!isValidPos(x) || !isValidPos(y) || !isValidPos(z)) throw new IllegalArgumentException("Invalid starting coordinate provided to function.");
+
+		Player currPlayer, comparePlayer = grid[x][y][z].getPlayer();
+		int a_x, a_y, a_z, b_x, b_y, b_z, totalChecks;
+		boolean samePlayer;
+
+		a_x = x + a_x_diff;
+		a_y = y + a_y_diff;
+		a_z = z + a_z_diff;
+		b_x = x + b_x_diff;
+		b_y = y + b_y_diff;
+		b_z = z + b_z_diff;
+		samePlayer = true;
+		totalChecks = 1;
+		//while either position are valid
+		while (  (isValidPos(a_x) && isValidPos(a_y) && isValidPos(a_z)) || (isValidPos(b_x) && isValidPos(b_y) && isValidPos(b_z))  ) {
+			if (isValidPos(a_x) && isValidPos(a_y) && isValidPos(a_z)) {
+				currPlayer = grid[a_x][a_y][a_z].getPlayer();
+				if (currPlayer == null || !currPlayer.equals(comparePlayer)) {
+					samePlayer = false;
+					break;
+				}
+				else {
+					a_x += a_x_diff;
+					a_y += a_y_diff;
+					a_z += a_z_diff;
+					++totalChecks;
+				}
+			}
+			if (isValidPos(b_x) && isValidPos(b_y) && isValidPos(b_z)) {
+				currPlayer = grid[b_x][b_y][b_z].getPlayer();
+				if (currPlayer == null || !currPlayer.equals(comparePlayer)) {
+					samePlayer = false;
+					break;
+				}
+				else {
+					b_x += b_x_diff;
+					b_y += b_y_diff;
+					b_z += b_z_diff;
+					++totalChecks;
+				}
+			}
+		}
+		if (samePlayer && totalChecks == this.size) {
+			this.status = GameStatus.victory;
+			winningPlayer = comparePlayer;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	private boolean checkDiags(int x, int y, int z, Axis axisToFix) {
+				
+		if (axisToFix == Axis.X) { // fix x
+			if(iterateThreeDimsGeneric(x,y,z, 0,1,1, 0,-1,-1)) return true;
+			if (iterateThreeDimsGeneric(x,y,z, 0,-1,1, 0,1,-1)) return true;
+		}
+		else if (axisToFix == Axis.Y) { // fix y
+			if(iterateThreeDimsGeneric(x,y,z, 1,0,1, -1,0,-1)) return true;
+			if (iterateThreeDimsGeneric(x,y,z, -1,0,1, 1,0,-1)) return true;
+		}
+		else if (axisToFix == Axis.Z) { // fix Z
+			if(iterateThreeDimsGeneric(x,y,z, 1,1,0, -1,-1,0)) return true;
+			if (iterateThreeDimsGeneric(x,y,z, -1,1,0, 1,-1,0)) return true;
+		}
+		else throw new IllegalArgumentException("Invalid axis to fix supplied to function.");
+
+		return false;
+	}
 
 	@Override
 	protected GameStatus updateStatus(Coordinate lastMove) {
@@ -98,113 +169,21 @@ public class ThreeDimBoard extends Board {
 		y = move.col;
 		z = move.dep;
 		
-		Player comparePlayer, currPlayer;
-		boolean samePlayer;
-	
-		// hold y and z constant, iterate over x
-		comparePlayer = grid[0][y][z].getPlayer();
-		samePlayer = true;
-		for (int i = 1; i < size; i++) {
-			currPlayer = grid[i][y][z].getPlayer();
-			if (comparePlayer == null || currPlayer == null || !comparePlayer.equals(currPlayer)) {
-				samePlayer = false;
-				break;
-			}
-		}
-		if (samePlayer) {
-			this.status = GameStatus.victory;
-			winningPlayer = comparePlayer;
-			return this.status;
-		}
-			
-		// hold x and z constant, iterate over y
-		comparePlayer = grid[x][0][z].getPlayer();
-		samePlayer = true;
-		for (int j = 1; j < size; ++j) {
-			currPlayer = grid[x][j][z].getPlayer();
-			if (comparePlayer == null || currPlayer == null || !comparePlayer.equals(currPlayer)) {
-				samePlayer = false;
-				break;
-			}
-		}
-		if (samePlayer) {
-			this.status = GameStatus.victory;
-			winningPlayer = comparePlayer;
-			return this.status;
-		}
+		//check verticals, horizontals, and depths
+		if (checkStraights(0,y,z, 1,0,0)) return this.status; // hold y and z constant, iterate over x
+		if (checkStraights(x,0,z, 0,1,0)) return this.status; // hold x and z constant, iterate over y
+		if (checkStraights(x,y,0, 0,0,1)) return this.status; // hold x and y constant, iterate over z
 
-		//hold x and y constant, iterate over z
-		comparePlayer = grid[x][y][0].getPlayer();
-		samePlayer = true;
-		for (int k = 1; k < size; ++k) {
-			currPlayer = grid[x][y][k].getPlayer();
-			if (comparePlayer == null || currPlayer == null || !comparePlayer.equals(currPlayer)) {
-				samePlayer = false;
-				break;
-			}
-		}
-		if (samePlayer) {
-			this.status = GameStatus.victory;
-			winningPlayer = comparePlayer;
-			return this.status;
-		}
-				
+		//check the corner to corner on the same plane
+		if (checkDiags(x,y,z,Axis.Z)) return this.status; // hold z constant, vary x and y
+		if (checkDiags(x,y,z,Axis.Y)) return this.status; // hold y constant, vary x and z
+		if (checkDiags(x,y,z,Axis.X)) return this.status; // hold x constant, vary y and z
 		
-		comparePlayer = grid[x][y][z].getPlayer();
-		int a_x, a_y, a_z, b_x, b_y, b_z, totalChecks;
-
-
-		// fix Z, vary X,Y
-		// Case 1: add 1,1 to a and add -1,-1 to b
-		// Case 2: add 1,-1 to a and -1,1 to b
-		a_x = x+1; a_y = y+1;
-		b_x = x-1; b_y = y-1;
-		samePlayer = true;
-		totalChecks = 1;
-		//while either position are valid
-		while (  (isValidPos(a_x) && isValidPos(a_y)) || (isValidPos(b_x) && isValidPos(b_y))  ) {
-			if ((isValidPos(a_x) && isValidPos(a_y))) {
-				currPlayer = grid[a_x][a_y][z].getPlayer();
-				if (currPlayer == null || !currPlayer.equals(comparePlayer)) {
-					samePlayer = false;
-					break;
-				}
-				else {
-					++a_x;
-					++a_y;
-					++totalChecks;
-				}
-			}
-			if ((isValidPos(b_x) && isValidPos(b_y))) {
-				currPlayer = grid[b_x][b_y][z].getPlayer();
-				if (currPlayer == null || !currPlayer.equals(comparePlayer)) {
-					samePlayer = false;
-					break;
-				}
-				else {
-					--b_x;
-					--b_y;
-					++totalChecks;
-				}
-			}
-		}
-		if (samePlayer && totalChecks == size) {
-			this.status = GameStatus.victory;
-			winningPlayer = comparePlayer;
-			return this.status;
-		}
-		
-		
-		
-		// TODO, fix Y, vary X,Z
-		// TODO, fix X, vary Y,Z
-		
-		
-		
-		
-		
-		
-		// TODO, check 4 primary diagonals from top corner to bottom corner
+		// check the main 4 diagonals for victory
+		if( iterateThreeDimsGeneric(x,y,z, -1,-1,-1,  1, 1,1) ) return this.status;
+		if( iterateThreeDimsGeneric(x,y,z, -1, 1,-1,  1,-1,1) ) return this.status;
+		if( iterateThreeDimsGeneric(x,y,z,  1, 1,-1, -1,-1,1) ) return this.status;
+		if( iterateThreeDimsGeneric(x,y,z,  1,-1,-1, -1, 1,1) ) return this.status;
 
 		// if we have gotten this far, there is not a winner at this point. iterate over the entire cube, checking for 'vacancies'. if a single vacancy exists, the game is still ongoing
 		// if a vacancy DOES NOT exist, then the game is a draw. update the status and return
@@ -230,15 +209,18 @@ public class ThreeDimBoard extends Board {
 
 	@Override
 	public GridPane getGuiDisplay(boolean absoluteSquares) {
-		
-		//TODO, fix this to look prettier for sizes larger than 3
-		
-		int totalRepresentationSize = 300;
-		// see the comment regarding row constraints for an explanation on 
-		int rowHeight = totalRepresentationSize/this.size;
-		
+							
 		GridPane guiRep = new GridPane();
 		
+		double totalRepresentationSize = 300;
+		
+		// see the comment regarding row constraints for an explanation on 
+		double rowHeight = totalRepresentationSize/this.size;
+		
+		double sizeOfEachGap;
+		if (size == 3) sizeOfEachGap = 0;
+		else sizeOfEachGap = (1 + (size-4)*1.5)*rowHeight*1/3;		
+		guiRep.setVgap(sizeOfEachGap);
 		/* add constraints for rows on the top level of the representation, each 
 		 * row height should be equal and thus should be the result of the division
 		 * between 300 (the total size of the representation) and the number of 
@@ -288,8 +270,8 @@ public class ThreeDimBoard extends Board {
 			}
 			
 			// apply rotations to give the illusion that it is in 3D space
-			sliceRep.getTransforms().add(new Rotate(-30, Rotate.X_AXIS)); //rotate away from us
-			sliceRep.getTransforms().add(new Rotate(-20, Rotate.Y_AXIS)); 
+			sliceRep.getTransforms().add(new Rotate(-55, Rotate.X_AXIS)); //rotate away from us
+			sliceRep.getTransforms().add(new Rotate(-10, Rotate.Y_AXIS)); 
 			sliceRep.getTransforms().add(new Rotate(-20, Rotate.Z_AXIS));
 			
 			sliceRep.setGridLinesVisible(true);

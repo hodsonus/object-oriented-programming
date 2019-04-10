@@ -17,9 +17,6 @@ public class Square {
     private SquareStatus status;
     private Player player;
 
-    /**
-     * @return the status of Square
-     */
     public SquareStatus getStatus() {
         return status;
     }

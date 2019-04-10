@@ -3,11 +3,10 @@ package course.oop.other;
 import course.oop.other.exceptions.GameNotInProgressException;
 
 public class ThreeDimTicTacToe extends TicTacToe {
-
-	private int size;
 	
-    public ThreeDimTicTacToe(int size) {
-    	this.size = size;
+    public ThreeDimTicTacToe(int desiredSize) {
+		if (desiredSize < 3 || desiredSize > 5) throw new UnsupportedOperationException("At this time, there is no support for game size other than 3, 4, and 5.");
+    	this.size = desiredSize;
     	resetGame();
     }
 
