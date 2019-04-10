@@ -1,8 +1,8 @@
 package course.oop.other;
 
-public class Triplet implements Coordinate {
+public class Triple implements Coordinate {
 
-    public Triplet(int row, int col, int dep) {
+    public Triple(int row, int col, int dep) {
     	this.row = row;
     	this.col = col;
     	this.dep = dep;
@@ -10,8 +10,8 @@ public class Triplet implements Coordinate {
     
     @Override
     public boolean equals(Object b) {
-    	if (!(b instanceof Triplet)) return false;
-    	Triplet otherTriplet = (Triplet)(b);
+    	if (!(b instanceof Triple)) return false;
+    	Triple otherTriplet = (Triple)(b);
     	return this.row==otherTriplet.row && this.col==otherTriplet.col && this.dep == otherTriplet.dep;
     }
     

@@ -5,7 +5,6 @@ import javafx.scene.layout.GridPane;
 
 public abstract class TicTacToe {
 
-    @SuppressWarnings("rawtypes")
 	protected Board board;
     protected GameStatus status;
     protected Player winningPlayer;
@@ -41,8 +40,8 @@ public abstract class TicTacToe {
        	updateStatus();
     }
     
-    protected GameStatus updateStatus(OnePair pair) {
-		this.status = board.updateStatus(pair);
+    protected GameStatus updateStatus(Coordinate move) {
+		this.status = board.updateStatus(move);
 		winningPlayer = board.getWinningPlayer();
 		return status;
 	}

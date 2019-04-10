@@ -4,8 +4,8 @@ import course.oop.other.exceptions.GameNotInProgressException;
 
 public class UltTicTacToe extends TicTacToe {
 
-    public UltTicTacToe() {
-    	super();
+    public UltTicTacToe(int sizeOfGame) {
+		if (sizeOfGame != 3) throw new UnsupportedOperationException("At this time, there is no support for game size other than 3.");
     }
 
     @Override

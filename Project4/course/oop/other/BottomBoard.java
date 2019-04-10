@@ -8,10 +8,10 @@ import javafx.scene.layout.RowConstraints;
 import javafx.geometry.HPos;
 import javafx.scene.text.Text;
 
-public class BottomBoard extends Board<Square> {
+public class BottomBoard extends StandardBoard<Square> {
 
 	public BottomBoard() {
-		super();
+		resetBoard();
 	}
 
 	@Override
@@ -89,7 +89,6 @@ public class BottomBoard extends Board<Square> {
 	
 	@Override
 	protected boolean checkSamePlayer(List<OnePair> lis) {
-		
 		Player comparePlayer = null, currPlayer = null;
 		boolean samePlayer = true;
 		if (grid[lis.get(0).row][lis.get(0).col].getPlayer() != null) {
@@ -114,7 +113,7 @@ public class BottomBoard extends Board<Square> {
 		boolean noVacancies = true;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				if (grid[i][j].getPlayer() == null) {
+				if (grid[i][j].getStatus() == SquareStatus.vacant) {
 					noVacancies = false;
 					break;
 				}

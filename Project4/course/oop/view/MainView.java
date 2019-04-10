@@ -1,9 +1,11 @@
 package course.oop.view;
 
+import course.oop.controller.GameType;
 import course.oop.controller.InvalidAIOperation;
 import course.oop.controller.InvalidPersonOperation;
 import course.oop.controller.TTTControllerImpl;
 import course.oop.other.Player;
+import course.oop.other.Triple;
 import course.oop.other.TwoPair;
 import course.oop.other.ExistingPlayers;
 import course.oop.other.OnePair;
@@ -26,6 +28,7 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ListView;
 
 import java.io.File;
@@ -43,7 +46,7 @@ public class MainView {
 	private boolean player1Turn;
 	private TTTControllerImpl ticTacToe;
 	private ExistingPlayers exP;
-	private boolean isUltimate;
+	private GameType gameType;
 
 	// public constructor
 	public MainView() {
@@ -300,7 +303,7 @@ public class MainView {
 		textPane.setPadding(new Insets(10, 10, 10, 10));
 
 		// instantiate the main center GridPane
-		GridPane timerScreen = new GridPane();
+		GridPane startNewGameScreen = new GridPane();
 
 		// timer label and field
 		Text timerLengthLabel = new Text("Timer length (seconds):");
@@ -310,27 +313,77 @@ public class MainView {
 		// user timer control box is selected by default
 		Text useTimerLabel = new Text("Use timer?");
 		CheckBox useTimerField = new CheckBox();
-		useTimerField.setSelected(true);
+		useTimerField.setSelected(false);
+		
+		Text sizeOfGameLabel = new Text("Size of game: ");
+		TextField sizeOfGameField = new TextField();
 
+		String basicString = "Basic";
+		String ultString = "Ultimate";
+		String threeDimString = "Three Dimensional (n x n x n)";
+		
 		// check box to determine if we are playing ultimate tic tac toe or not
-		Text isUltimateLabel = new Text("Ultimate Tic Tac Toe?");
-		CheckBox isUltimateField = new CheckBox();
+		Text gameTypeLabel = new Text("Type of game: ");		
+		ChoiceBox<String> gameTypeField = new ChoiceBox<>();
+		gameTypeField.getItems().addAll(basicString, ultString, threeDimString);
 
-		// add nodes to the timerScreen GridPane
-		timerScreen.add(isUltimateLabel, 0, 0);
-		timerScreen.add(isUltimateField, 1, 0);
-		timerScreen.add(useTimerLabel, 0, 1);
-		timerScreen.add(useTimerField, 1, 1);
-		timerScreen.add(timerLengthLabel, 0, 2);
-		timerScreen.add(timerLengthField, 1, 2);
-		timerScreen.add(submitButton, 0, 3);
+		// add nodes to the startNewGameScreen GridPane
+		startNewGameScreen.add(gameTypeLabel, 0, 0);
+		startNewGameScreen.add(gameTypeField, 1, 0);
+		gameTypeField.setValue(basicString);
+
+		startNewGameScreen.add(sizeOfGameLabel, 0, 1);
+		startNewGameScreen.add(sizeOfGameField, 1, 1);
+		sizeOfGameLabel.setVisible(false);
+		sizeOfGameField.setVisible(false);
+
+		startNewGameScreen.add(useTimerLabel, 0, 2);
+		startNewGameScreen.add(useTimerField, 1, 2);
+		startNewGameScreen.add(timerLengthLabel, 0, 3);
+		startNewGameScreen.add(timerLengthField, 1, 3);
+		timerLengthLabel.setVisible(false);
+		timerLengthField.setVisible(false);
+		
+		startNewGameScreen.add(submitButton, 0, 4);
 
 		// handler that handles the submission of this page
 		EventHandler<MouseEvent> submitHandler = new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
+				
 				int timerLength = -1;
-				isUltimate = isUltimateField.isSelected();
+				
+				// logic to extract game type
+				String type = gameTypeField.getValue();
+				
+				int sizeOfGame;
+				if (basicString.equals(type)) {
+					gameType = GameType.Basic;
+					sizeOfGame = 3;
+				}
+				else if (ultString.equals(type)) {
+					gameType = GameType.Ultimate;
+					sizeOfGame = 3;
+				}
+				else if (threeDimString.equals(type)) {
+					try {
+						sizeOfGame = Integer.parseInt(sizeOfGameField.getText());
+						if (sizeOfGame < 3) { //TODO, consider adding a cap on game size
+							startNewGame(new Text("Input to size of game field not greater than 3."));
+							return;
+						}
+					}
+					catch (NumberFormatException nfe) {
+						startNewGame(new Text("Input to size of game field not a valid integer."));
+						return;
+					}
+					gameType = GameType.ThreeDim;
+				}
+				else {
+					startNewGame(new Text("Please select a game type."));
+					return;	
+				}
+				
 				if (useTimerField.isSelected()) {
 					try {
 						timerLength = Integer.parseInt(timerLengthField.getText());
@@ -344,7 +397,7 @@ public class MainView {
 					}
 				}
 				System.out.println("Game has been started.");
-				ticTacToe.startNewGame(2, timerLength, isUltimate);
+				ticTacToe.startNewGame(timerLength, gameType, sizeOfGame);
 				updateView();
 				addTopButtons();
 				return;
@@ -366,9 +419,23 @@ public class MainView {
 			}
 		};
 		useTimerField.addEventFilter(MouseEvent.MOUSE_CLICKED, timerHandler);
+		
+
+		gameTypeField.getSelectionModel().selectedItemProperty().addListener( 
+				(obs, selectionWasEmpty, selectionIsNowEmpty) -> {
+					if (threeDimString.equals(gameTypeField.getValue())) {
+						sizeOfGameLabel.setVisible(true);
+						sizeOfGameField.setVisible(true);
+					}
+					else {
+						sizeOfGameLabel.setVisible(false);
+						sizeOfGameField.setVisible(false);
+					}
+			    }
+		);
 
 		// set the root and be done
-		root.setCenter(formatGridPane(timerScreen, Pos.CENTER));
+		root.setCenter(formatGridPane(startNewGameScreen, Pos.CENTER));
 	}
 
 	// called many times throughout the program, this resets the buttons and
@@ -471,11 +538,15 @@ public class MainView {
 				 System.out.println("In game " + topRow + "," + topCol + ": cell " +
 						 			bottomRow + "," + bottomCol + " clicked.");
 				 
-				 if (topCol == null && topRow == null) { // then we are playing in a basic game
+				 if (gameType == GameType.Basic) { // then we are playing in a basic game
 					 supplyMove(new OnePair(bottomRow,bottomCol));
 				 }
-				 else { // we are playing an ultimate game
+				 else if (gameType == GameType.Ultimate) { // we are playing an ultimate game
 					 supplyMove(new TwoPair(new OnePair(topRow,topCol), new OnePair(bottomRow,bottomCol)));
+				 }
+				 else {
+					 System.out.println("X,Y,Z = " + bottomRow + "," + bottomCol+ "," + topRow);
+					 supplyMove(  new Triple(bottomRow,bottomCol,topRow)  );
 				 }
 				 
 				/* checkWinner() */
@@ -700,7 +771,6 @@ public class MainView {
 			return;
 		}
 		catch (GameNotInProgressException gnipe) {
-			//TODO
 			System.out.println("Cell was clicked after the game ended.");
 			valid = false;
 		}

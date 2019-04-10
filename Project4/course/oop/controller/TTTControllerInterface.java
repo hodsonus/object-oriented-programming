@@ -23,7 +23,7 @@ public interface TTTControllerInterface {
 	 * 						int <=0 means no timeout.  Any int > 0 means to time out
 	 * 						in the given number of seconds.
 	 */
-	void startNewGame(int numPlayers, int timeoutInSecs, boolean isUltimate);
+	void startNewGame(int timeoutInSecs, GameType typeToInstantiate, int sizeOfGame);
 
 
 	/**

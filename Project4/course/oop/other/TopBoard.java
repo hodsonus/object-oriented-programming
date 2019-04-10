@@ -8,13 +8,13 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
-public class TopBoard extends Board<BottomBoard> {
+public class TopBoard extends StandardBoard<BottomBoard> {
 	
     private OnePair lastBottomMove;
 
     public TopBoard() {
-    	super();
     	lastBottomMove = null;
+    	resetBoard();
     }
     
 	@Override
@@ -138,7 +138,6 @@ public class TopBoard extends Board<BottomBoard> {
 			for (int j = 0; j < 3; j++) {
 				if (grid[i][j].getStatus() == GameStatus.ongoing) {
 					noVacancies = false;
-					break;
 				}
 			}
 		}

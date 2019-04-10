@@ -29,15 +29,22 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	 * 						in the given number of seconds.
 	 */
 	@Override
-	public void startNewGame(int numPlayers, int timeoutInSecs, boolean isUltimate) {
+	public void startNewGame(int timeoutInSecs, GameType typeToInstantiate, int sizeOfGame) {
 		
-		if (!validNumPlayer(numPlayers)) throw new IllegalArgumentException();
-
 		this.timeoutInSecs = timeoutInSecs;
 		fillEmptyPlayers();
 		
-		if (isUltimate) game = new UltTicTacToe();
-		else game = new BasicTicTacToe();
+		game = new ThreeDimTicTacToe(3); 
+		
+		if (typeToInstantiate == GameType.Ultimate){
+			game = new UltTicTacToe(sizeOfGame);
+		}
+		else if (typeToInstantiate == GameType.Basic) {
+			game = new BasicTicTacToe(sizeOfGame);
+		}
+		else if (typeToInstantiate == GameType.ThreeDim) {
+			game = new ThreeDimTicTacToe(sizeOfGame);
+		}
 		
 		writeStartTime();
     }
