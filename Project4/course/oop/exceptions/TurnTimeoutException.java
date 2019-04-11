@@ -1,4 +1,4 @@
-package course.oop.other.exceptions;
+package course.oop.exceptions;
 
 public class TurnTimeoutException extends RuntimeException {
 
@@ -7,10 +7,6 @@ public class TurnTimeoutException extends RuntimeException {
 
 	public TurnTimeoutException(String message){
 	    this.message = message;
-	}
-
-	public TurnTimeoutException() {
-		this.message  = "";
 	}
 	
 	@Override

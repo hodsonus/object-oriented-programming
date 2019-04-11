@@ -1,4 +1,8 @@
-package course.oop.other;
+package course.oop.model;
+
+import course.oop.other.Coordinate;
+import course.oop.other.GameStatus;
+import course.oop.other.OnePair;
 
 public abstract class StandardBoard<T> extends Board {
 	

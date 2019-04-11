@@ -1,6 +1,10 @@
-package course.oop.other;
+package course.oop.model;
 
-import course.oop.other.exceptions.GameNotInProgressException;
+import course.oop.exceptions.GameNotInProgressException;
+import course.oop.other.Coordinate;
+import course.oop.other.GameStatus;
+import course.oop.other.OnePair;
+import course.oop.players.Player;
 
 public class BasicTicTacToe extends TicTacToe {
 	
@@ -26,25 +30,25 @@ public class BasicTicTacToe extends TicTacToe {
     
 	@Override
 	public boolean attemptMove(Player currentPlayerObj, Coordinate pair) {
-		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
+		if (status != GameStatus.ongoing) throw new GameNotInProgressException("Cannot attempt a move when the game is not in progress.");
 		if (!(pair instanceof OnePair)) throw new IllegalArgumentException(
-				"Move must be an instance of OnePair, only one grid is viable at this depth.");
+															"Move must be an instance of OnePair,"
+															+ "only one grid is viable at this depth.");
 		OnePair move = (OnePair)pair;
 		boolean validMove = board.attemptMove(currentPlayerObj, move);
 		if (validMove){
 			updateStatus(move);
-//			System.out.println(board);
 		}
 		return validMove;
 	}
 
 	@Override
 	public boolean attemptMove(Player currentPlayerObj) {
-		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
+		if (status != GameStatus.ongoing) throw new GameNotInProgressException("Cannot attempt a move when the game is not in progress.");
 		int row, col, iter = 0, max_iter=10000;
 		do {
-			row = randInt(0,size);
-			col = randInt(0,size);
+			row = randInt(0,size-1);
+			col = randInt(0,size-1);
 			iter++;
 		} while(   !attemptMove(currentPlayerObj, new OnePair(row, col)) && iter<max_iter   );
 		return true;

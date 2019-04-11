@@ -1,8 +1,18 @@
 package course.oop.controller;
 
+import course.oop.exceptions.GameInProgressException;
+import course.oop.exceptions.InvalidAIOperationException;
+import course.oop.exceptions.InvalidPersonOperationException;
+import course.oop.exceptions.TurnTimeoutException;
+import course.oop.model.BasicTicTacToe;
+import course.oop.model.ThreeDimTicTacToe;
+import course.oop.model.TicTacToe;
+import course.oop.model.UltTicTacToe;
 import course.oop.other.*;
-import course.oop.other.exceptions.GameInProgressException;
-import course.oop.other.exceptions.TurnTimeoutException;
+import course.oop.players.AI;
+import course.oop.players.ExistingPlayers;
+import course.oop.players.Person;
+import course.oop.players.Player;
 import javafx.scene.layout.GridPane;
 
 public class TTTControllerImpl implements TTTControllerInterface {
@@ -20,14 +30,6 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		this.exP = ExistingPlayers.getInstance();
 	}
 
-	/**
-	 * Initialize or reset game board. Set each entry back to a default value.
-	 * 
-	 * @param numPlayers Must be valid. 2 = two human players, 1 = human plays against computer
-	 * @param timeoutInSecs Allow for a user's turn to time out. Any
-	 * 						int <=0 means no timeout.  Any int > 0 means to time out
-	 * 						in the given number of seconds.
-	 */
 	@Override
 	public void startNewGame(int timeoutInSecs, GameType typeToInstantiate, int sizeOfGame) {
 		
@@ -43,6 +45,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		else if (typeToInstantiate == GameType.ThreeDim) {
 			game = new ThreeDimTicTacToe(sizeOfGame);
 		}
+		else throw new IllegalArgumentException("Must specify which type of game to instantiate.");
 		
 		writeStartTime();
     }
@@ -68,18 +71,10 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		return numPlayers == 1 || numPlayers == 2;
 	}
 
-	/**
-	 * Create a player with specified username, marker, 
-	 * and player number (either 1 or 2) 
-	 * 
-	 * @param username
-	 * @param marker
-	 * @param playerNum
-	 */
 	@Override
 	public Player createPlayer(String username, String marker, int playerNum) {
 		
-		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
+		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException("Cannot create a person when the game is in progress.");
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
 		
 		if (playerNum == 1)  {
@@ -98,7 +93,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	
 	public Player createAI(String username, String marker, int playerNum) {
 		
-		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
+		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException("Cannot create an AI when the game is in progress.");
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
 		
 		if (playerNum == 1) {
@@ -116,7 +111,7 @@ public class TTTControllerImpl implements TTTControllerInterface {
 	}
 	
 	public Player useExistingPlayer(Player a, int playerNum) {
-		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException();
+		if (game != null && game.getStatus() == GameStatus.ongoing) throw new GameInProgressException("Cannot choose to use an existing player when a game is in progress.");
 		if (!validNumPlayer(playerNum)) throw new IllegalArgumentException();
 
 		if (playerNum == 1) {
@@ -128,59 +123,51 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		return a;
 	}
 
-	/**
-	 * Allow user to specify location for marker.  
-	 * Return true if the location is valid and available.
-	 * 
-	 * @param row Must be valid. 0,1,2
-	 * @param col Must be valid. 0,1,2
-	 * @param currentPlayer Must be valid. 1 = player1; 2 = player2
-	 * @return
-	 */
 	@Override
 	public boolean setSelection(Coordinate pos, int currentPlayer) {
 		if (!validUserTurnLength()) throw new TurnTimeoutException("User took too long to provide input to program.");
-		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
-		
+		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException("Valid player number not provided.");
+			
 		Player currentPlayerObj;
 		
 		if (currentPlayer == 1) {
-			if (player1 instanceof AI) throw new InvalidAIOperation();
+			if (player1 instanceof AI) throw new InvalidAIOperationException("Player 1 is an AI, cannot explicitly set move.");
 			currentPlayerObj = player1;
 		}
 		else { //currentPlayer == 2
-			if (player2 instanceof AI) throw new InvalidAIOperation();
+			if (player2 instanceof AI) throw new InvalidAIOperationException("Player 2 is an AI, cannot explicitly set move.");
 			currentPlayerObj = player2;
 		}
-
+		
+		writeStartTime();
 		return game.attemptMove(currentPlayerObj, pos);
 	}
 	
-	public void makeAISelection(int currentPlayer) {
+	public boolean makeAISelection(int currentPlayer) {
 		if (!validUserTurnLength()) throw new TurnTimeoutException("User took too long to provide input to program.");
-		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException();
+		if (!validNumPlayer(currentPlayer)) throw new IllegalArgumentException("Valid player number not provided.");
 		
 		Player currentPlayerObj;
 		
 		if (currentPlayer == 1) {
-			if (player1 instanceof Person) throw new InvalidPersonOperation();
+			if (player1 instanceof Person) throw new InvalidPersonOperationException("Player 1 is a person, cannot automatically set move.");
 			currentPlayerObj = player1;
 		}
 		else { //currentPlayer == 2
-			if (player2 instanceof Person) throw new InvalidPersonOperation();
+			if (player2 instanceof Person) throw new InvalidPersonOperationException("Player 2 is a person, cannot automatically set move.");
 			currentPlayerObj = player2;
 		}
+		
 		writeStartTime();
-		game.attemptMove(currentPlayerObj);
+		return game.attemptMove(currentPlayerObj);
 	}
 
 	/**
 	 * Determines if there is a winner and returns the following:
-	 * 
-	 * 0=no winner / game in progress / not all spaces have been selected; 
-	 * 1=player1; 
-	 * 2=player2; 
-	 * 3=tie/no more available locations
+	 * 0 = no winner / game in progress / not all spaces have been selected; 
+	 * 1 = player1; 
+	 * 2 = player2; 
+	 * 3 = tie/no more available locations
 	 * 
 	 * @return
 	 */
@@ -194,14 +181,13 @@ public class TTTControllerImpl implements TTTControllerInterface {
 		return 3;
 	}
 
-	/**
-	 * Return a printable display of current selections.
-	 * Shows 3x3 (or nxn) board with each players marker.
-	 * 
-	 * @return
-	 */
 	@Override
 	public String getGameDisplay() {
+		return toString();
+	}
+	
+	@Override
+	public String toString() {
 		return game.getDisplay();
 	}
 	

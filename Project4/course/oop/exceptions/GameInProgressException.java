@@ -1,4 +1,4 @@
-package course.oop.other.exceptions;
+package course.oop.exceptions;
 
 public class GameInProgressException extends RuntimeException {
 
@@ -7,10 +7,6 @@ public class GameInProgressException extends RuntimeException {
 
 	public GameInProgressException(String message){
 	    this.message = message;
-	}
-
-	public GameInProgressException() {
-		this.message  = "";
 	}
 	
 	@Override

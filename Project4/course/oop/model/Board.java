@@ -1,6 +1,9 @@
-package course.oop.other;
+package course.oop.model;
 
-import course.oop.other.exceptions.GameNotInProgressException;
+import course.oop.exceptions.GameNotInProgressException;
+import course.oop.other.Coordinate;
+import course.oop.other.GameStatus;
+import course.oop.players.Player;
 import javafx.scene.layout.GridPane;
 
 public abstract class Board {
@@ -15,7 +18,7 @@ public abstract class Board {
     	resetBoard();
     }
     
-    public Player getWinningPlayer() {
+    public Player getPlayer() {
     	return winningPlayer;
     }
     	
@@ -24,7 +27,7 @@ public abstract class Board {
 	}
 	
 	public void quit() {
-		if (this.status == GameStatus.quit) throw new GameNotInProgressException();
+		if (this.status == GameStatus.quit) throw new GameNotInProgressException("Cannot quit a game that has been quit.");
 		this.status = GameStatus.quit;
 	}
 	
@@ -39,5 +42,5 @@ public abstract class Board {
 	protected abstract GameStatus updateStatus(Coordinate lastMove);
 	public abstract void resetBoard();
 	public abstract boolean attemptMove(Player player, Coordinate move);
-	public abstract GridPane getGuiDisplay(boolean absoluteSquares);
+	public abstract GridPane getGuiDisplay(boolean absoluteSquares, boolean colorSquares);
 }

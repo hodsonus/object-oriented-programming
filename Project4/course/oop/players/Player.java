@@ -1,8 +1,9 @@
-package course.oop.other;
+package course.oop.players;
+
 
 import java.io.Serializable;
 
-import course.oop.other.exceptions.InvalidMarkerException;
+import course.oop.exceptions.InvalidMarkerException;
 
 public abstract class Player implements Serializable {
 

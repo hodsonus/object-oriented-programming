@@ -1,4 +1,4 @@
-package course.oop.other;
+package course.oop.players;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,7 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -20,7 +19,6 @@ public class ExistingPlayers {
 	//Singleton Behavior
 	private static ExistingPlayers instance = new ExistingPlayers();
 	public static ExistingPlayers getInstance() {
-		
 		return instance;
 	}
 	

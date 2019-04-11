@@ -1,5 +1,7 @@
-package course.oop.other;
+package course.oop.model;
 
+import course.oop.other.SquareStatus;
+import course.oop.players.Player;
 import javafx.scene.text.Text;
 
 public class Square {
@@ -32,11 +34,11 @@ public class Square {
     	return this.player;
     }
     
-    @Override
-    public String toString() {
-    	if (player == null) return "-";
-    	return player.getMarker();
-    }
+//    @Override
+//    public String toString() {
+//    	if (player == null) return "-";
+//    	return player.getMarker();
+//    }
 
 	public Text getGuiDisplay() {
 		if (player == null) return new Text("-");

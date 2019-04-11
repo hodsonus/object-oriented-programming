@@ -1,4 +1,4 @@
-package course.oop.other.exceptions;
+package course.oop.exceptions;
 
 public class InvalidMarkerException extends RuntimeException {
 
@@ -7,10 +7,6 @@ public class InvalidMarkerException extends RuntimeException {
 
 	public InvalidMarkerException(String message){
 	    this.message = message;
-	}
-
-	public InvalidMarkerException() {
-		this.message  = "";
 	}
 	
 	@Override

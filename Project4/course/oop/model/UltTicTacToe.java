@@ -1,6 +1,11 @@
-package course.oop.other;
+package course.oop.model;
 
-import course.oop.other.exceptions.GameNotInProgressException;
+import course.oop.exceptions.GameNotInProgressException;
+import course.oop.other.Coordinate;
+import course.oop.other.GameStatus;
+import course.oop.other.OnePair;
+import course.oop.other.TwoPair;
+import course.oop.players.Player;
 
 public class UltTicTacToe extends TicTacToe {
 
@@ -37,14 +42,13 @@ public class UltTicTacToe extends TicTacToe {
 	@Override
 	public boolean attemptMove(Player currentPlayerObj, Coordinate pair) {
 		
-		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
+		if (status != GameStatus.ongoing) throw new GameNotInProgressException("Cannot attempt a move on a game that is not ongoing.");
 		if (!(pair instanceof TwoPair)) throw new IllegalArgumentException(
 				"Move must be an instance of TwoPair, only two grids are viable at this depth.");
 		TwoPair bothMoves = (TwoPair)pair;
 		boolean validMove = board.attemptMove(currentPlayerObj, bothMoves);
 		if (validMove) {
 			updateStatus(bothMoves.pair2);
-//			System.out.println(board);
 		}
 		
 		return validMove;
@@ -52,7 +56,7 @@ public class UltTicTacToe extends TicTacToe {
 
 	@Override
 	public boolean attemptMove(Player currentPlayerObj) {
-		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
+		if (status != GameStatus.ongoing) throw new GameNotInProgressException("Cannot attempt a move on a game that is not ongoing.");
 		int outerRow, outerCol, innerRow, innerCol, maxIter = 50000;
 		int iter = 0;
 		do {

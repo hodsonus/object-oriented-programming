@@ -1,4 +1,4 @@
-package course.oop.other;
+package course.oop.players;
 
 public class AI extends Player {
 

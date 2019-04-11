@@ -1,6 +1,10 @@
-package course.oop.other;
+package course.oop.model;
 
-import course.oop.other.exceptions.GameNotInProgressException;
+import course.oop.exceptions.GameNotInProgressException;
+import course.oop.other.Coordinate;
+import course.oop.other.GameStatus;
+import course.oop.other.Triple;
+import course.oop.players.Player;
 
 public class ThreeDimTicTacToe extends TicTacToe {
 	
@@ -23,27 +27,26 @@ public class ThreeDimTicTacToe extends TicTacToe {
     
 	@Override
 	public void resetGame() {
-		this.board = new ThreeDimBoard(size);
+		this.board = new ThreeDimBoard(this.size);
 		updateStatus();
 	}    
  
 	@Override
 	public boolean attemptMove(Player currentPlayerObj, Coordinate pair) {
-		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
+		if (status != GameStatus.ongoing) throw new GameNotInProgressException("Cannot attempt a move if the game is not ongoing.");
 		if (!(pair instanceof Triple)) throw new IllegalArgumentException(
 				"Move must be an instance of Triple, only one grid is viable at this depth.");
 		Triple move = (Triple)pair;
 		boolean validMove = board.attemptMove(currentPlayerObj, move);
 		if (validMove){
 			updateStatus(move);
-//			System.out.println(board);
 		}
 		return validMove;
 	}
 
 	@Override
 	public boolean attemptMove(Player currentPlayerObj) {
-		if (status != GameStatus.ongoing) throw new GameNotInProgressException();
+		if (status != GameStatus.ongoing) throw new GameNotInProgressException("Cannot attempt a move if the game is not ongoing.");
 		int row, col, dep, iter = 0, max_iter=10000;
 		do {
 			row = randInt(0,size-1);

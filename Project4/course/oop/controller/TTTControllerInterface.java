@@ -11,17 +11,21 @@
 package course.oop.controller;
 
 import course.oop.other.Coordinate;
-import course.oop.other.Player;
+import course.oop.other.GameType;
+import course.oop.players.Player;
 
 public interface TTTControllerInterface {
 	
 	/**
 	 * Initialize or reset game board. Set each entry back to a default value.
 	 * 
-	 * @param numPlayers Must be valid. 2 = two human players, 1 = human plays against computer
-	 * @param timeoutInSecs Allow for a user's turn to time out. Any
-	 * 						int <=0 means no timeout.  Any int > 0 means to time out
-	 * 						in the given number of seconds.
+	 * @param timeoutInSecs     Allow for a user's turn to time out. Any
+	 * 						    int <=0 means no timeout.  Any int > 0 means to time out
+	 * 						    in the given number of seconds.
+	 * @param typeToInstantiate Must be valid and non null. The type of game that is instantiated
+	 * 							will be of this type.
+	 * @param sizeOfGame        Passes the size of the board to the constructor - the constructor
+	 * 							will throw an exception if it is not a valid size.
 	 */
 	void startNewGame(int timeoutInSecs, GameType typeToInstantiate, int sizeOfGame);
 
@@ -33,6 +37,7 @@ public interface TTTControllerInterface {
 	 * @param username
 	 * @param marker
 	 * @param playerNum
+	 * 
 	 * @return 
 	 */
 	Player createPlayer(String username, String marker, int playerNum);
@@ -41,10 +46,11 @@ public interface TTTControllerInterface {
 	 * Allow user to specify location for marker.  
 	 * Return true if the location is valid and available.
 	 * 
-	 * @param row Must be valid. 0,1,2
-	 * @param col Must be valid. 0,1,2
+	 * @param pos           Must be valid. The exact type of game that is instantiated will
+	 * 						throw exceptions if Coordinate is not the proper type of move 
 	 * @param currentPlayer Must be valid. 1 = player1; 2 = player2
-	 * @return
+	 * 
+	 * @return if it was valid or not
 	 */
 	boolean setSelection(Coordinate pos, int currentPlayer);
 	
@@ -54,7 +60,7 @@ public interface TTTControllerInterface {
 	 * 0=no winner / game in progress / not all spaces have been selected; 
 	 * 1=player1; 
 	 * 2=player2; 
-	 * 3=tie/no more available locations
+	 * 3= tie/no more available locations
 	 * 
 	 * @return
 	 */
@@ -63,6 +69,7 @@ public interface TTTControllerInterface {
 	/**
 	 * Return a printable display of current selections.
 	 * Shows 3x3 (or nxn) board with each players marker.
+	 * Alias for toString()
 	 * 
 	 * @return
 	 */

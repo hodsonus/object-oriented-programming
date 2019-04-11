@@ -1,18 +1,18 @@
 package course.oop.view;
 
-import course.oop.controller.GameType;
-import course.oop.controller.InvalidAIOperation;
-import course.oop.controller.InvalidPersonOperation;
 import course.oop.controller.TTTControllerImpl;
-import course.oop.other.Player;
+import course.oop.exceptions.GameNotInProgressException;
+import course.oop.exceptions.InvalidAIOperationException;
+import course.oop.exceptions.InvalidMarkerException;
+import course.oop.exceptions.InvalidPersonOperationException;
+import course.oop.exceptions.TurnTimeoutException;
 import course.oop.other.Triple;
 import course.oop.other.TwoPair;
-import course.oop.other.ExistingPlayers;
 import course.oop.other.OnePair;
 import course.oop.other.Coordinate;
-import course.oop.other.exceptions.GameNotInProgressException;
-import course.oop.other.exceptions.InvalidMarkerException;
-import course.oop.other.exceptions.TurnTimeoutException;
+import course.oop.other.GameType;
+import course.oop.players.ExistingPlayers;
+import course.oop.players.Player;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -406,7 +406,7 @@ public class MainView {
 				}
 				System.out.println("Game has been started.");
 				ticTacToe.startNewGame(timerLength, gameType, sizeOfGame);
-				updateView();
+				updateView(true);
 				addTopButtons();
 				return;
 			}
@@ -458,7 +458,7 @@ public class MainView {
 				player1Turn = true;
 				ticTacToe.resetGame();
 				addTopButtons();
-				updateView();
+				updateView(true);
 				System.out.println("Game has been reset.");
 				return;
 			}
@@ -498,7 +498,7 @@ public class MainView {
 	}
 
 	// refresh the view
-	private void updateView() {
+	private void updateView(boolean shouldRegisterEvents) {
 		// make a call to the game board to retrieve it's display
 		// this trickles all the way down
 		// from MainView -> TTTControllerImpl -> BasicTicTacToe -> BottomBoard
@@ -507,18 +507,19 @@ public class MainView {
 		// -> TopBoard -> BottomBoard -> Square
 		GridPane display = ticTacToe.getGUIDisplay();
 		
-		ObservableList<Node> topLevelChildren = display.getChildren();
-		
-		for (Node topLevelChild : topLevelChildren) {
-			if (topLevelChild instanceof Text) {
-				regsiterSquareEvent((Text)topLevelChild);
-			}
-			else if (topLevelChild instanceof GridPane) {
-				GridPane topLevelGridPane = (GridPane)topLevelChild;
-				ObservableList<Node> bottomLevelChildren = topLevelGridPane.getChildren(); 
-				for (Node bottomLevelChild : bottomLevelChildren) {
-					if (bottomLevelChild instanceof Text) {
-						regsiterSquareEvent((Text)bottomLevelChild);
+		if (shouldRegisterEvents) {
+			ObservableList<Node> topLevelChildren = display.getChildren();
+			for (Node topLevelChild : topLevelChildren) {
+				if (topLevelChild instanceof Text) {
+					regsiterSquareEvent((Text)topLevelChild);
+				}
+				else if (topLevelChild instanceof GridPane) {
+					GridPane topLevelGridPane = (GridPane)topLevelChild;
+					ObservableList<Node> bottomLevelChildren = topLevelGridPane.getChildren(); 
+					for (Node bottomLevelChild : bottomLevelChildren) {
+						if (bottomLevelChild instanceof Text) {
+							regsiterSquareEvent((Text)bottomLevelChild);
+						}
 					}
 				}
 			}
@@ -553,7 +554,6 @@ public class MainView {
 					 supplyMove(new TwoPair(new OnePair(topRow,topCol), new OnePair(bottomRow,bottomCol)));
 				 }
 				 else {
-					 System.out.println("X,Y,Z = " + bottomRow + "," + bottomCol+ "," + topRow);
 					 supplyMove(  new Triple(bottomRow,bottomCol,topRow)  );
 				 }
 				 
@@ -580,7 +580,7 @@ public class MainView {
 				/* */
 
 				// update the view after a successful move
-				updateView();
+				updateView(true);
 				// write the start time for the next move
 				ticTacToe.writeStartTime();
 			}
@@ -651,7 +651,7 @@ public class MainView {
 				/* */
 
 				// update the view after a successful move
-				updateView();
+				updateView(true);
 				// write the start time for the next move
 				ticTacToe.writeStartTime();
 				System.out.println("AI move requested.");
@@ -715,7 +715,7 @@ public class MainView {
 				player1Turn = true;
 				ticTacToe.resetGame();
 				root.setBottom(new Text(""));
-				updateView();
+				updateView(true);
 				addTopButtons();
 				exP.savePlayers();
 				ticTacToe.writeStartTime();
@@ -744,7 +744,7 @@ public class MainView {
 		buttonPane.setPadding(new Insets(10, 10, 10, 10));
 
 		// update the view for the user to view the end game state
-		updateView();
+		updateView(false);
 
 		// play the end game sound
 		File clip = new File("cheering.aiff");
@@ -766,7 +766,7 @@ public class MainView {
 			}
 		}
 		// handle invalid player attempting move
-		catch (InvalidAIOperation iaio) {
+		catch (InvalidAIOperationException iaio) {
 			addTopButtons();
 			updateErrorMessage(new Text("Please supply an AI's move, current player is not a person."));
 			return;
@@ -807,7 +807,7 @@ public class MainView {
 			}
 		}
 		// catch invalid users attempting AI moves
-		catch (InvalidPersonOperation ipo) {
+		catch (InvalidPersonOperationException ipo) {
 			addTopButtons();
 			updateErrorMessage(new Text("Please supply a person's move, current player is not an AI."));
 			return;

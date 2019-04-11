@@ -1,58 +1,85 @@
-package course.oop.other;
+package course.oop.model;
 
-import course.oop.other.exceptions.GameNotInProgressException;
+import java.util.HashSet;
+
+import course.oop.exceptions.GameNotInProgressException;
+import course.oop.other.Coordinate;
+import course.oop.other.GameStatus;
+import course.oop.other.OnePair;
+import course.oop.other.TwoPair;
+import course.oop.players.Player;
+import javafx.geometry.HPos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import javafx.geometry.HPos;
-import javafx.scene.text.Text;
 
-public class BottomBoard extends StandardBoard<Square> {
+public class TopBoard extends StandardBoard<BottomBoard> {
+	
+    private OnePair lastBottomMove;
+    private HashSet<OnePair> winningMove;
 
-	public BottomBoard(int desiredSize) {
-		super(desiredSize);
-	}
-
+    public TopBoard(int desiredSize) {
+    	super(desiredSize);
+    	lastBottomMove = null;
+    }
+    
 	@Override
 	public boolean attemptMove(Player player, Coordinate move) {
-		if (!(move instanceof OnePair))
-			throw new IllegalArgumentException(
-					"Move must be an instance of OnePair, only one grid is viable at this depth.");
 		
-		if (this.status != GameStatus.ongoing) throw new GameNotInProgressException();
+		if (!(move instanceof TwoPair))
+			throw new IllegalArgumentException(
+					"Move must be an instance of TwoPair, only two grids are viable at this depth.");
+		
+		if (this.status != GameStatus.ongoing) throw new GameNotInProgressException("Cannot attempt a move when the game is not ongoing.");
 
-		OnePair currDepthMove = (OnePair) move;
+		TwoPair currbothMoves = (TwoPair) move;
+		OnePair currTopMove = currbothMoves.pair1;
+		OnePair currBottomMove = currbothMoves.pair2;
 
+		if (lastBottomMove != null) {
+			if (grid[lastBottomMove.row][lastBottomMove.col].getStatus() != GameStatus.ongoing) {
+				lastBottomMove = null;
+			}
+			else if (!lastBottomMove.equals(currTopMove)) {
+				return false;
+			}
+		}
+		
 		int row, col;
-		row = currDepthMove.row;
-		col = currDepthMove.col;
+		row = currTopMove.row;
+		col = currTopMove.col;
 		
 		if (!isValidPos(row) || !isValidPos(col)) return false;
+		if (grid[row][col].getStatus() != GameStatus.ongoing) return false;
 		
-		boolean moveSuccess = grid[row][col].setPlayerOccupation(player);
-		if (moveSuccess) updateStatus(currDepthMove);
+		boolean moveSuccess = grid[row][col].attemptMove(player, currBottomMove);
+		
+		if (moveSuccess) {
+			updateStatus(currTopMove);
+			lastBottomMove = currBottomMove;
+		}
 		return moveSuccess;
 	}
-	
+
 	@Override
 	public void resetBoard() {
-		grid = new Square[size][size];
+		grid = new BottomBoard[size][size];
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				grid[i][j] = new Square();
+				grid[i][j] = new BottomBoard(size);
 			}
 		}
 		status = GameStatus.ongoing;
 	}
 	
 	@Override
-	public GridPane getGuiDisplay(boolean absoluteSquares) {
-		
-		GridPane guiRep = new GridPane();
+	public GridPane getGuiDisplay(boolean absoluteSquares, boolean colorSquares) {
 
+		GridPane guiRep = new GridPane();
+		
 		ColumnConstraints columnConst;
 		RowConstraints rowConst;
-		int cellSize = 100;
+		int cellSize = 150;
 		for (int i = 0; i < size; i++) {
 			
 			rowConst = new RowConstraints();
@@ -72,12 +99,26 @@ public class BottomBoard extends StandardBoard<Square> {
 			columnConst.setHalignment(HPos.CENTER);
 			guiRep.getColumnConstraints().add(columnConst);
 			guiRep.getRowConstraints().add(rowConst);
-		}
-         
-		for (int i = 0; i < grid.length; i++) {
-			for (int j = 0; j < grid.length; j++) {
-				Text currText = grid[i][j].getGuiDisplay();
-				guiRep.add(currText,j,i);
+		}			
+		
+		boolean bottomAbsoluteSquares = false;
+		boolean bottomColorSquares = false;
+		
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				GridPane currPane = grid[i][j].getGuiDisplay(bottomAbsoluteSquares,bottomColorSquares);
+				if (colorSquares) {
+					if (this.status == GameStatus.ongoing) {
+						if (grid[i][j].getStatus() != GameStatus.ongoing) currPane.setStyle("-fx-background-color: #CD6155;");
+						else if (lastBottomMove != null && i == lastBottomMove.row && j == lastBottomMove.col) currPane.setStyle("-fx-background-color: #D98880;");
+					}
+					else {
+						if (winningMove != null && winningMove.contains(new OnePair(i,j))) {
+							currPane.setStyle("-fx-background-color: #D98880;");
+						}
+					}
+				}
+				guiRep.add(currPane,j,i);
 			}
 		}
 		
@@ -85,15 +126,14 @@ public class BottomBoard extends StandardBoard<Square> {
 		
 		return guiRep;
 	}
-		
+
 	@Override
 	protected boolean noVacancies() {
 		boolean noVacancies = true;
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				if (grid[i][j].getStatus() == SquareStatus.vacant) {
+				if (grid[i][j].getStatus() == GameStatus.ongoing) {
 					noVacancies = false;
-					break;
 				}
 			}
 		}
@@ -110,29 +150,25 @@ public class BottomBoard extends StandardBoard<Square> {
 	public String toString() {
 		StringBuilder drawing = new StringBuilder("Game Status: ");
 		drawing.append(this.status.toString().toUpperCase());
-		drawing.append("\n      |     |     \n   ");
+		
+		drawing.append("\n");
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
+				drawing.append("Row: " + i + ", Col: " + j + "\t");
 				drawing.append(grid[i][j].toString());
-				if (j != grid[i].length - 1) {
-					drawing.append("  |  ");
-				}
+				drawing.append("\n");
 			}
-
-			if (i != grid.length - 1) {
-				drawing.append("\n _____|_____|_____\n      |     |     \n   ");
-			}
+			drawing.append("\n\n");
 		}
-		drawing.append("\n      |     |    ");
 		return drawing.toString();
 	}
 
 	@Override
 	protected boolean iterateTwoDimsGeneric(int x, int y, int a_x_diff, int a_y_diff, int b_x_diff, int b_y_diff) {
-		
 		if (!isValidPos(x) || !isValidPos(y)) throw new IllegalArgumentException("Invalid starting coordinate provided to function.");
-				
+		winningMove = new HashSet<OnePair>();
 		Player currPlayer, comparePlayer = grid[x][y].getPlayer();
+		winningMove.add(new OnePair(x,y));
 		int a_x, a_y, b_x, b_y, totalChecks;
 		boolean samePlayer;
 		
@@ -146,6 +182,7 @@ public class BottomBoard extends StandardBoard<Square> {
 		while (  (isValidPos(a_x) && isValidPos(a_y)) || (isValidPos(b_x) && isValidPos(b_y))  ) {
 			if (isValidPos(a_x) && isValidPos(a_y)) {
 				currPlayer = grid[a_x][a_y].getPlayer();
+				winningMove.add(new OnePair(a_x,a_y));
 				if (currPlayer == null || !currPlayer.equals(comparePlayer)) {
 					samePlayer = false;
 					break;
@@ -158,6 +195,7 @@ public class BottomBoard extends StandardBoard<Square> {
 			}
 			if (isValidPos(b_x) && isValidPos(b_y)) {
 				currPlayer = grid[b_x][b_y].getPlayer();
+				winningMove.add(new OnePair(b_x,b_y));
 				if (currPlayer == null || !currPlayer.equals(comparePlayer)) {
 					samePlayer = false;
 					break;
@@ -173,6 +211,9 @@ public class BottomBoard extends StandardBoard<Square> {
 			this.status = GameStatus.victory;
 			winningPlayer = comparePlayer;
 			return true;
+		}
+		else {
+			winningMove = null;
 		}
 		
 		return false;

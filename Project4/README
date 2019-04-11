@@ -1,4 +1,4 @@
-To compile and run this code, please create a new Eclipse project from an existing directory (Project3).
+To compile and run this code, please create a new Eclipse project from an existing directory (Project4).
 
 The project can then be launched through eclipse with the Main.java class found in course.oop.application.
 
@@ -6,19 +6,20 @@ All features from the previous iteration have been implemented, and the user int
 
 Any player that is input to the program will be available for future use. I accomplished this through serialization. This serialization was implemented with a wrapper class that contained a map of Player objects. This Map is serialized and stored in the root as players.ser. Delete this file if you would like to start with a fresh set of Players.
 
-There is a noise that is played upon victory, but no animation. The project requirements only asked for one.
+I have attempted the extra credit, and aim to achieve an 85/75 on this project. The features that I have chosen to implement are below:
 
-Some notes about the runtime behavior and the behavior of the classes that are implemented:
-	Custom runtime exceptions have been implemented. These are as follows and will be thrown if input to the object is provided when the object is not in a valid state:
-		InvalidAIOperation
-			occurs when an AI attempts to make a move with a coordinate specified (an AI should make a random move)
-		InvalidPersonOperation
-			occurs when a person attempts to make a move with no coordinate specified
-		GameInProgressException
-			occurs when a user attempts to create a new player when a game is in progress
-		GameNotInProgressException
-			occurs when a move is attempted and the game is not in progress (i.e. it has been quit, resulted in a victory, or resulted in a draw)
-		InvalidMarkerException
-			occurs when an invalid player marker is provided for a player object. often occurs when the marker is more than 1 character long
-		TurnTimeoutException
-			is thrown when a user takes too long to supply input to the program when it is their turn
+	                   Feature                   |  Points
+	---------------------------------------------|-----------
+	    Click to place a marker on the board     |    10
+	Ultimate 3x3 with inner 3x3 Tic-Tac-Toe game |    30
+	        Three D - NxNxN Tic-Tac-Toe          |    30
+	           Two D - NxN Tic-Tac-Toe           |    15
+	---------------------------------------------|-----------
+	                                      Total  |    85
+
+	Some notes on the features I implemented:
+		The generic features have a capped size in my code. All logic is generalized and will translate perfectly to any valid size of N, but I have capped the size in the constructor of the objects because of the mess that it creates on the UI when a large board (larger than 5) is instantiated. As a result, only boards of size 3, 4, or 5 can be instantiated of both the NxNxN game and the NxN game.
+
+I have refactored the code extensively from project 3, and now include several design patterns discussed in class.
+
+In the videos, I have shown the features using my AI players. This makes it so that I can finish games fast and not waste time selecting markers. These features also, of course, work a person selecting markers.

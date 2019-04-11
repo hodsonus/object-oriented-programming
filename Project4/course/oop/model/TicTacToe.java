@@ -1,6 +1,9 @@
-package course.oop.other;
+package course.oop.model;
 
-import course.oop.other.exceptions.GameNotInProgressException;
+import course.oop.exceptions.GameNotInProgressException;
+import course.oop.other.Coordinate;
+import course.oop.other.GameStatus;
+import course.oop.players.Player;
 import javafx.scene.layout.GridPane;
 
 public abstract class TicTacToe {
@@ -32,20 +35,20 @@ public abstract class TicTacToe {
 	/* you should be able to quit the game ONLY if it is ongoing. if it is before the game or 
 	 * after the game this method makes no sense */
     public void quitGame() {
-		if (this.status == GameStatus.quit) throw new GameNotInProgressException();
+		if (this.status == GameStatus.quit) throw new GameNotInProgressException("Cannot quit a game that has already been quit.");
        	board.quit();
        	updateStatus();
     }
     
     protected GameStatus updateStatus(Coordinate move) {
-		this.status = board.updateStatus(move);
-		winningPlayer = board.getWinningPlayer();
+		this.status = board.getStatus();
+		winningPlayer = board.getPlayer();
 		return status;
 	}
     
 	protected GameStatus updateStatus() {
 		this.status = board.getStatus();
-		winningPlayer = board.getWinningPlayer();
+		winningPlayer = board.getPlayer();
 		return status;
 	}
 	
@@ -54,11 +57,11 @@ public abstract class TicTacToe {
 	}
 	
 	public GridPane getGuiDisplay() {
-		return board.getGuiDisplay(true);
+		return board.getGuiDisplay(true,true);
 	}	
 	
 	public String getDisplay() {
-		if (board == null) throw new GameNotInProgressException();
+		if (board == null) throw new GameNotInProgressException("Cannot get a representation of the board if the game has not been started.");
 		return board.toString();
 	} 
 	

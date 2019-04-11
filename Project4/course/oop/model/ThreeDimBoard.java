@@ -1,16 +1,25 @@
-package course.oop.other;
+package course.oop.model;
 
-import course.oop.other.exceptions.GameNotInProgressException;
+import java.util.HashSet;
+import course.oop.exceptions.GameNotInProgressException;
+import course.oop.other.Axis;
+import course.oop.other.Coordinate;
+import course.oop.other.GameStatus;
+import course.oop.other.SquareStatus;
+import course.oop.other.Triple;
+import course.oop.players.Player;
 import javafx.geometry.HPos;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 
 public class ThreeDimBoard extends Board {
 	
     protected Square[][][] grid;  
+    private HashSet<Triple> winningMove;
         
     public ThreeDimBoard(int desiredSize) {
     	super(desiredSize);
@@ -27,7 +36,7 @@ public class ThreeDimBoard extends Board {
 			throw new IllegalArgumentException(
 					"Move must be an instance of Triple, only one three dimensional grid is viable at this depth.");
 		
-		if (this.status != GameStatus.ongoing) throw new GameNotInProgressException();
+		if (this.status != GameStatus.ongoing) throw new GameNotInProgressException("Cannot attempt a move if the game is not ongoing.");
 
 		Triple currDepthMove = (Triple) move;
 
@@ -53,37 +62,8 @@ public class ThreeDimBoard extends Board {
 				}
 			}
 		}
+		winningMove = new HashSet<Triple>();
 		status = GameStatus.ongoing;
-	}
-	
-	/* checks columns, rows, and depths. call to iterate over the row containing y and z using 0,y,z, 1,0,0 
-	 * x,y,z are your initial values and a,b,c is how much you move by */
-	private boolean checkStraights(int x, int y, int z, int a, int b, int c) {
-		Player comparePlayer, currPlayer;
-		boolean samePlayer;
-	
-		// hold y and z constant, iterate over x
-		comparePlayer = grid[x][y][z].getPlayer();
-		samePlayer = true;
-		x+=a;
-		y+=b;
-		z+=c;
-		while ( isValidPos(x) && isValidPos(y) && isValidPos(z) ) {
-			currPlayer = grid[x][y][z].getPlayer();
-			if (comparePlayer == null || currPlayer == null || !comparePlayer.equals(currPlayer)) {
-				samePlayer = false;
-				break;
-			}
-			x+=a;
-			y+=b;
-			z+=c;
-		}
-		if (samePlayer) {
-			this.status = GameStatus.victory;
-			winningPlayer = comparePlayer;
-		}
-		
-		return samePlayer;
 	}
 	
 	private boolean iterateThreeDimsGeneric(int x, int y, int z, int a_x_diff, int a_y_diff, int a_z_diff, int b_x_diff, int b_y_diff, int b_z_diff) {
@@ -91,6 +71,7 @@ public class ThreeDimBoard extends Board {
 		if (!isValidPos(x) || !isValidPos(y) || !isValidPos(z)) throw new IllegalArgumentException("Invalid starting coordinate provided to function.");
 
 		Player currPlayer, comparePlayer = grid[x][y][z].getPlayer();
+		winningMove.add(new Triple(x,y,z));
 		int a_x, a_y, a_z, b_x, b_y, b_z, totalChecks;
 		boolean samePlayer;
 
@@ -106,6 +87,7 @@ public class ThreeDimBoard extends Board {
 		while (  (isValidPos(a_x) && isValidPos(a_y) && isValidPos(a_z)) || (isValidPos(b_x) && isValidPos(b_y) && isValidPos(b_z))  ) {
 			if (isValidPos(a_x) && isValidPos(a_y) && isValidPos(a_z)) {
 				currPlayer = grid[a_x][a_y][a_z].getPlayer();
+				winningMove.add(new Triple(a_x,a_y,a_z));
 				if (currPlayer == null || !currPlayer.equals(comparePlayer)) {
 					samePlayer = false;
 					break;
@@ -119,6 +101,7 @@ public class ThreeDimBoard extends Board {
 			}
 			if (isValidPos(b_x) && isValidPos(b_y) && isValidPos(b_z)) {
 				currPlayer = grid[b_x][b_y][b_z].getPlayer();
+				winningMove.add(new Triple(b_x,b_y,b_z));
 				if (currPlayer == null || !currPlayer.equals(comparePlayer)) {
 					samePlayer = false;
 					break;
@@ -135,6 +118,9 @@ public class ThreeDimBoard extends Board {
 			this.status = GameStatus.victory;
 			winningPlayer = comparePlayer;
 			return true;
+		}
+		else {
+			winningMove = new HashSet<Triple>();
 		}
 		
 		return false;
@@ -170,9 +156,9 @@ public class ThreeDimBoard extends Board {
 		z = move.dep;
 		
 		//check verticals, horizontals, and depths
-		if (checkStraights(0,y,z, 1,0,0)) return this.status; // hold y and z constant, iterate over x
-		if (checkStraights(x,0,z, 0,1,0)) return this.status; // hold x and z constant, iterate over y
-		if (checkStraights(x,y,0, 0,0,1)) return this.status; // hold x and y constant, iterate over z
+		if( iterateThreeDimsGeneric(x,y,z, -1, 0, 0,  1,0,0) ) return this.status;
+		if( iterateThreeDimsGeneric(x,y,z,  0,-1, 0,  0,1,0) ) return this.status;
+		if( iterateThreeDimsGeneric(x,y,z,  0, 0,-1,  0,0,1) ) return this.status;
 
 		//check the corner to corner on the same plane
 		if (checkDiags(x,y,z,Axis.Z)) return this.status; // hold z constant, vary x and y
@@ -208,7 +194,7 @@ public class ThreeDimBoard extends Board {
 	}
 
 	@Override
-	public GridPane getGuiDisplay(boolean absoluteSquares) {
+	public GridPane getGuiDisplay(boolean absoluteSquares, boolean colorSquares) {
 							
 		GridPane guiRep = new GridPane();
 		
@@ -246,6 +232,8 @@ public class ThreeDimBoard extends Board {
 		columnConst.setMaxWidth(totalRepresentationSize);
 		columnConst.setHalignment(HPos.CENTER);
 		guiRep.getColumnConstraints().add(columnConst);
+		
+		Text currSquare;
 
 		// add each slice of the cube to the representation in the below for loop
 		for (int k = 0; k < size; ++k) {
@@ -264,7 +252,8 @@ public class ThreeDimBoard extends Board {
 			
 			for (int i = 0; i < size; ++i) {
 				for (int j = 0; j < size; ++j) {
-					Text currSquare = grid[i][j][k].getGuiDisplay();
+					currSquare = grid[i][j][k].getGuiDisplay();
+					if (winningMove.contains(new Triple(i,j,k))) currSquare.setFill(Color.web("#CD6155"));
 					sliceRep.add(currSquare,j,i);
 				}
 			}
@@ -283,28 +272,28 @@ public class ThreeDimBoard extends Board {
 		return guiRep;
 	}
 	
-	@Override
-	public String toString() {
-		StringBuilder drawing = new StringBuilder("Game Status: ");
-		drawing.append(this.status.toString().toUpperCase());
-		
-		// slice the cube from top layer to the bottom layer by starting at k=size-1 and moving to the bottom
-		for (int k = size-1; k >= 0; --k) {
-			drawing.append("\n      |     |     \n   ");
-			for (int i = 0; i < size; ++i) {
-				for (int j = 0; j < size; ++j) {
-					drawing.append(grid[i][j][k].toString());
-					if (j != grid[i].length - 1) {
-						drawing.append("  |  ");
-					}
-				}
-	
-				if (i != grid.length - 1) {
-					drawing.append("\n _____|_____|_____\n      |     |     \n   ");
-				}
-			}
-			drawing.append("\n      |     |    ");
-		}
-		return drawing.toString();
-	}
+//	@Override
+//	public String toString() {
+//		StringBuilder drawing = new StringBuilder("Game Status: ");
+//		drawing.append(this.status.toString().toUpperCase());
+//		
+//		// slice the cube from top layer to the bottom layer by starting at k=size-1 and moving to the bottom
+//		for (int k = size-1; k >= 0; --k) {
+//			drawing.append("\n      |     |     \n   ");
+//			for (int i = 0; i < size; ++i) {
+//				for (int j = 0; j < size; ++j) {
+//					drawing.append(grid[i][j][k].toString());
+//					if (j != grid[i].length - 1) {
+//						drawing.append("  |  ");
+//					}
+//				}
+//	
+//				if (i != grid.length - 1) {
+//					drawing.append("\n _____|_____|_____\n      |     |     \n   ");
+//				}
+//			}
+//			drawing.append("\n      |     |    ");
+//		}
+//		return drawing.toString();
+//	}
 }
